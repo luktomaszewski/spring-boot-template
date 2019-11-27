@@ -1,0 +1,11 @@
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+### IntelliJ IDEA ###
+.idea
+### NetBeans ###
+### VS Code ###
