@@ -68,12 +68,12 @@ class TemplateControllerTest {
         String acronym = "JD";
         Long budget = 182005000L;
 
-        NewTemplateDto ogcNice = new NewTemplateDto(name, acronym, budget);
+        NewTemplateDto johnDoe = new NewTemplateDto(name, acronym, budget);
 
         // when
         MvcResult result = mvc.perform(post(CREATE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(ogcNice)))
+                .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
@@ -92,18 +92,36 @@ class TemplateControllerTest {
 
     @Test
     @Transactional
-    void getByIdWhenExistsShouldReturnTemplateDtoAndHttpStatusOk() throws Exception {
+    void addWhenNewTemplateDtoWithMissingValueShouldReturnHttpStatusBadRequest() throws Exception {
         // given
-        String templateName = "name";
-        String templateAcronym = "NA";
+        String templateName = "John Doe";
         Long templateBudget = 182005000L;
 
-        TemplateEntity ogcNice = new TemplateEntity();
-        ogcNice.setName(templateName);
-        ogcNice.setAcronym(templateAcronym);
-        ogcNice.setBudget(templateBudget);
+        NewTemplateDto johnDoe = new NewTemplateDto(templateName, null, templateBudget);
 
-        TemplateEntity savedEntity = templateRepository.save(ogcNice);
+        // when
+        mvc.perform(post(CREATE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(johnDoe)))
+                // then
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    void getByIdWhenExistsShouldReturnTemplateDtoAndHttpStatusOk() throws Exception {
+        // given
+        String templateName = "John Doe";
+        String templateAcronym = "JD";
+        Long templateBudget = 182005000L;
+
+        TemplateEntity johnDoe = new TemplateEntity();
+        johnDoe.setName(templateName);
+        johnDoe.setAcronym(templateAcronym);
+        johnDoe.setBudget(templateBudget);
+
+        TemplateEntity savedEntity = templateRepository.save(johnDoe);
         Long id = savedEntity.getId();
 
         // when
@@ -123,24 +141,6 @@ class TemplateControllerTest {
     }
 
     @Test
-    @Transactional
-    void addWhenNewTemplateDtoWithMissingValueShouldReturnHttpStatusBadRequest() throws Exception {
-        // given
-        String templateName = "name";
-        Long templateBudget = 182005000L;
-
-        NewTemplateDto ogcNice = new NewTemplateDto(templateName, null, templateBudget);
-
-        // when
-        mvc.perform(post(CREATE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(ogcNice)))
-                // then
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
     void getByIdWhenDoesntExistShouldReturnHttpStatusNotFound() throws Exception {
         // given
         Long id = 99L;
@@ -154,26 +154,26 @@ class TemplateControllerTest {
 
     @Test
     @Transactional
-    void getListWithDefaultInputShouldReturnUnsortedItems() throws Exception {
+    void searchWithDefaultInputShouldReturnUnsortedItems() throws Exception {
         // given
-        TemplateEntity ogcNice = new TemplateEntity();
-        ogcNice.setName("name");
-        ogcNice.setAcronym("NA");
-        ogcNice.setBudget(1000000L);
+        TemplateEntity johnDoe = new TemplateEntity();
+        johnDoe.setName("John Doe");
+        johnDoe.setAcronym("JD");
+        johnDoe.setBudget(1000000L);
 
-        TemplateEntity psg = new TemplateEntity();
-        psg.setName("Paris Saint-Germain");
-        psg.setAcronym("PSG");
-        psg.setBudget(3000000L);
+        TemplateEntity janKowalski = new TemplateEntity();
+        janKowalski.setName("Jan Kowalski");
+        janKowalski.setAcronym("JK");
+        janKowalski.setBudget(3000000L);
 
-        TemplateEntity olympicLyon = new TemplateEntity();
-        olympicLyon.setName("Olympique Lyon");
-        olympicLyon.setAcronym("OL");
-        olympicLyon.setBudget(2000000L);
+        TemplateEntity juanitoPerez = new TemplateEntity();
+        juanitoPerez.setName("Juantio Pérez");
+        juanitoPerez.setAcronym("JP");
+        juanitoPerez.setBudget(2000000L);
 
-        templateRepository.save(ogcNice);
-        templateRepository.save(psg);
-        templateRepository.save(olympicLyon);
+        templateRepository.save(johnDoe);
+        templateRepository.save(janKowalski);
+        templateRepository.save(juanitoPerez);
 
         // when
         MvcResult result = mvc.perform(get(GET_LIST_URL)
@@ -196,32 +196,32 @@ class TemplateControllerTest {
 
     @Test
     @Transactional
-    void getListWithCustomInputShouldReturnItemsSortedByBudgetAsc() throws Exception {
+    void searchWithCustomInputShouldReturnItemsSortedByBudgetAsc() throws Exception {
         // given
-        TemplateEntity ogcNice = new TemplateEntity();
-        ogcNice.setName("name");
-        ogcNice.setAcronym("NA");
-        ogcNice.setBudget(1000000L);
+        TemplateEntity johnDoe = new TemplateEntity();
+        johnDoe.setName("John Doe");
+        johnDoe.setAcronym("JD");
+        johnDoe.setBudget(1000000L);
 
-        TemplateEntity psg = new TemplateEntity();
-        psg.setName("Paris Saint-Germain");
-        psg.setAcronym("PSG");
-        psg.setBudget(3000000L);
+        TemplateEntity janKowalski = new TemplateEntity();
+        janKowalski.setName("Jan Kowalski");
+        janKowalski.setAcronym("JK");
+        janKowalski.setBudget(3000000L);
 
-        TemplateEntity olympicLyon = new TemplateEntity();
-        olympicLyon.setName("Olympique Lyon");
-        olympicLyon.setAcronym("OL");
-        olympicLyon.setBudget(2000000L);
+        TemplateEntity juanitoPerez = new TemplateEntity();
+        juanitoPerez.setName("Juantio Pérez");
+        juanitoPerez.setAcronym("JP");
+        juanitoPerez.setBudget(2000000L);
 
-        TemplateEntity asMonaco = new TemplateEntity();
-        asMonaco.setName("AS Monaco");
-        asMonaco.setAcronym("ASM");
-        asMonaco.setBudget(4000000L);
+        TemplateEntity pierreEtPaul = new TemplateEntity();
+        pierreEtPaul.setName("Pierre et Paul");
+        pierreEtPaul.setAcronym("PP");
+        pierreEtPaul.setBudget(4000000L);
 
-        templateRepository.save(ogcNice);
-        templateRepository.save(psg);
-        templateRepository.save(olympicLyon);
-        templateRepository.save(asMonaco);
+        templateRepository.save(johnDoe);
+        templateRepository.save(janKowalski);
+        templateRepository.save(juanitoPerez);
+        templateRepository.save(pierreEtPaul);
 
         // when
         MvcResult result = mvc.perform(get(GET_LIST_URL)

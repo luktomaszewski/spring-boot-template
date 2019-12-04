@@ -39,7 +39,7 @@ public class TemplateController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<SearchResult<TemplateDto>> getList(
+    public ResponseEntity<SearchResult<TemplateDto>> search(
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "20") int size,
             @RequestParam(name = "sort", required = false) String sort,
