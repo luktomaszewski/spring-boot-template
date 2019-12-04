@@ -1,6 +1,7 @@
 package com.lomasz.spring.boot.template.config;
 
 import com.google.common.base.Predicates;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
@@ -17,20 +18,32 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    private static final Contact CONTACT  =
-            new Contact("lomasz", "", "lukasz.tomaszewski89@gmail.com");
+    @Value("${info.app.name}")
+    private String name;
+
+    @Value("${info.app.version}")
+    private String version;
+
+    private static final Contact CONTACT =
+            new Contact("Lomasz", "https://github.com/lomasz", "lukasz.tomaszewski89@gmail.com");
 
     @Bean
     public Docket swaggerApi() {
         final ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("REST API")
-                .description("REST API")
+                .title(name)
+                .description("Spring Boot Template REST API")
+                .version(version)
                 .contact(CONTACT)
                 .build();
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .paths(Predicates.not(PathSelectors.regex("/error.*")))
+                .paths(Predicates.not(
+                        Predicates.or(
+                                PathSelectors.regex("/error.*"),
+                                PathSelectors.regex("/actuator.*")
+                        )
+                ))
                 .build()
                 .ignoredParameterTypes(Pageable.class, PagedResourcesAssembler.class)
                 .useDefaultResponseMessages(false)

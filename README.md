@@ -31,6 +31,10 @@ docker-compose up --build -d
 docker-compose down --remove-orphans
 ```
 
+## Actuator
+* `http://localhost:4326/actuator/health` - health information (status)
+* `http://localhost:4326/actuator/info` - application basic information
+
 ## API Documentation
 * `http://localhost:4326/v2/api-docs` - API Docs [JSON]
 * `http://localhost:4326/swagger-ui.html` - Swagger UI
