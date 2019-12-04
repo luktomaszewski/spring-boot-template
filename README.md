@@ -10,26 +10,26 @@
 * JaCoCo Java Code Coverage
 
 ## How to run
-#### using docker-compose
 
+#### using gradle wrapper
+```bash
+./gradlew clean bootRun
+```
+
+#### using docker-compose
 *REQUIRED: Docker running*
 
-###### Starting
-```
+###### Start
+```bash
 ./gradlew clean build
 docker-compose up --build -d
 ```
 
-###### Closing
-```
+###### Stop
+```bash
 docker-compose down --remove-orphans
 ```
 
-#### using gradle wrapper
-```
-./gradlew clean bootRun
-```
-
-## Swagger
+## API Documentation
 * `http://localhost:4326/v2/api-docs` - API Docs [JSON]
 * `http://localhost:4326/swagger-ui.html` - Swagger UI

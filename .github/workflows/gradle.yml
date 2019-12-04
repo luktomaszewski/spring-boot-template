@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-
+    name: java-ci
     runs-on: ubuntu-latest
 
     steps:

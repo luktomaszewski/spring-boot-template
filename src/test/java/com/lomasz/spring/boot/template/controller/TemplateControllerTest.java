@@ -59,7 +59,7 @@ class TemplateControllerTest {
     }
 
     @Test
-    void getList() {
+    void search() {
         // given
         int page = 0;
         int limit = 5;
@@ -84,7 +84,7 @@ class TemplateControllerTest {
         when(teamService.search(pageRequest)).thenReturn(searchResult);
 
         // when
-        ResponseEntity result = teamController.getList(page, limit, sort.toString(), pageRequest);
+        ResponseEntity result = teamController.search(page, limit, sort.toString(), pageRequest);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
