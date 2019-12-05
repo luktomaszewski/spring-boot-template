@@ -159,7 +159,7 @@ class TemplateServiceTest {
         when(pageable.getPageSize()).thenReturn(limit);
         when(pageable.getPageNumber()).thenReturn(page);
 
-        Page templatePage = mock(Page.class);
+        Page<TemplateEntity> templatePage = mock(Page.class);
         when(templatePage.getTotalPages()).thenReturn(totalPages);
         when(templatePage.getTotalElements()).thenReturn(totalElements);
         when(templatePage.getPageable()).thenReturn(pageable);

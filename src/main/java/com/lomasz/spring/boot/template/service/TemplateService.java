@@ -44,7 +44,7 @@ public class TemplateService {
     public Long create(NewTemplateDto newDto) {
         log.info("Saving new object: " + newDto);
         TemplateEntity savedEntity = templateRepository.save(templateMapper.toEntity(newDto));
-        log.info("New entity saved in database successfully: " + savedEntity);
+        log.info("New entity saved in the database successfully: " + savedEntity);
         return savedEntity.getId();
     }
 

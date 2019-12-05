@@ -22,9 +22,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -81,13 +83,13 @@ class TemplateControllerTest {
 
         Long id = Long.valueOf(result.getResponse().getHeader("Location").split("/")[4]);
 
-        TemplateEntity savedTemplate = templateRepository.findById(id).get();
+        Optional<TemplateEntity> savedTemplate = templateRepository.findById(id);
 
-        assertNotNull(savedTemplate);
-        assertThat(savedTemplate.getId()).isEqualTo(id);
-        assertThat(savedTemplate.getName()).isEqualTo(name);
-        assertThat(savedTemplate.getAcronym()).isEqualTo(acronym);
-        assertThat(savedTemplate.getBudget()).isEqualTo(budget);
+        assertTrue(savedTemplate.isPresent());
+        assertThat(savedTemplate.get().getId()).isEqualTo(id);
+        assertThat(savedTemplate.get().getName()).isEqualTo(name);
+        assertThat(savedTemplate.get().getAcronym()).isEqualTo(acronym);
+        assertThat(savedTemplate.get().getBudget()).isEqualTo(budget);
     }
 
     @Test

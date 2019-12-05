@@ -16,8 +16,9 @@
 * `build.gradle`: change **`group`** value
 * `src/main`: rename main package value 
 * `application.properties`: change **`server.port`** value
-* `docker-compose.yml`: change image name
-* `docker-compose.yml`: change port mapping
+* `docker-compose.yml`:
+    * change image name
+    * change port mapping
 * `SwaggerConfig.java`: change description in **`swaggerApi()`** and **`CONTACT`**
 
 ## How to run application
