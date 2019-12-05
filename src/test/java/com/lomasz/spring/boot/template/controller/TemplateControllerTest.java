@@ -18,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,11 +50,11 @@ class TemplateControllerTest {
         when(teamService.create(newTemplateDto)).thenReturn(id);
 
         // when
-        ResponseEntity result = teamController.add(newTemplateDto);
+        ResponseEntity<Void> result = teamController.add(newTemplateDto);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(result.getHeaders().get("Location").get(0)).isEqualTo("/api/" + id);
+        assertThat(Objects.requireNonNull(result.getHeaders().get("Location")).get(0)).isEqualTo("/api/" + id);
 
         verify(teamService, times(1)).create(newTemplateDto);
     }
@@ -84,7 +85,7 @@ class TemplateControllerTest {
         when(teamService.search(pageRequest)).thenReturn(searchResult);
 
         // when
-        ResponseEntity result = teamController.search(page, limit, sort.toString(), pageRequest);
+        ResponseEntity<SearchResult<TemplateDto>> result = teamController.search(page, limit, sort.toString(), pageRequest);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -100,7 +101,7 @@ class TemplateControllerTest {
         when(teamService.findById(id)).thenReturn(Optional.empty());
 
         // when
-        ResponseEntity result = teamController.getById(id);
+        ResponseEntity<TemplateDto> result = teamController.getById(id);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -122,7 +123,7 @@ class TemplateControllerTest {
         when(teamService.findById(id)).thenReturn(Optional.of(templateDto));
 
         // when
-        ResponseEntity result = teamController.getById(id);
+        ResponseEntity<TemplateDto> result = teamController.getById(id);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
