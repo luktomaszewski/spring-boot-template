@@ -1,10 +1,10 @@
-name: Java CI
+name: CI
 
 on: [push]
 
 jobs:
   build:
-    name: java-ci
+    name: ci
     runs-on: ubuntu-latest
 
     steps:

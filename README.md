@@ -1,5 +1,5 @@
 # Spring Boot Template 
-![CI Status](https://github.com/lomasz/spring-boot-template/workflows/Java%20CI/badge.svg)
+![CI Status](https://github.com/lomasz/spring-boot-template/workflows/CI/badge.svg)
 
 * Spring Boot 2.1.9.RELEASE + Web + JPA + REST
 * Gradle Wrapper
@@ -10,7 +10,17 @@
 * JUnit 5
 * JaCoCo Java Code Coverage
 
-## How to run
+## How to reuse template
+
+* `settings.gradle`: change **`rootProject.name`** value
+* `build.gradle`: change **`group`** value
+* `src/main`: rename main package value 
+* `application.properties`: change **`server.port`** value
+* `docker-compose.yml`: change image name
+* `docker-compose.yml`: change port mapping
+* `SwaggerConfig.java`: change description in **`swaggerApi()`** and **`CONTACT`**
+
+## How to run application
 
 #### using gradle wrapper
 ```bash
