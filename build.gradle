@@ -86,4 +86,8 @@ test.finalizedBy jacocoTestReport
 
 test {
     useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
