@@ -130,8 +130,8 @@ class TemplateServiceTest {
         // given
         int page = 0;
         int limit = 5;
-
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.Direction.DESC, "name");
+        Sort.Direction sortDirection = Sort.Direction.DESC;
+        String sortBy = "sort";
 
         Long id = 1L;
         String name = "John Doe";
@@ -169,7 +169,7 @@ class TemplateServiceTest {
         when(templateMapper.toDtoList(entityList)).thenReturn(dtoList);
 
         // when
-        SearchResult<TemplateDto> result = templateService.search(pageRequest);
+        SearchResult<TemplateDto> result = templateService.search(page, limit, sortDirection, sortBy);
 
         // then
         assertThat(result.getItems()).isEqualTo(dtoList);

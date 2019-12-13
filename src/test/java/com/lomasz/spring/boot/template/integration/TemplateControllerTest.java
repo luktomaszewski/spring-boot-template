@@ -22,7 +22,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -107,7 +106,42 @@ class TemplateControllerTest {
                 .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
                 .andExpect(status().isBadRequest());
+    }
 
+    @Test
+    @Transactional
+    void addWhenNewTemplateDtoWithNegativeBudgetValueShouldReturnHttpStatusBadRequest() throws Exception {
+        // given
+        String templateName = "John Doe";
+        String templateAcronym = "JD";
+        Long templateBudget = -182005000L;
+
+        NewTemplateDto johnDoe = new NewTemplateDto(templateName, templateAcronym, templateBudget);
+
+        // when
+        mvc.perform(post(CREATE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(johnDoe)))
+                // then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void addWhenNewTemplateDtoWithTooLongAcronymValueShouldReturnHttpStatusBadRequest() throws Exception {
+        // given
+        String templateName = "John Doe";
+        String templateAcronym = "JOHN DOE";
+        Long templateBudget = -182005000L;
+
+        NewTemplateDto johnDoe = new NewTemplateDto(templateName, templateAcronym, templateBudget);
+
+        // when
+        mvc.perform(post(CREATE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(johnDoe)))
+                // then
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -229,7 +263,8 @@ class TemplateControllerTest {
         MvcResult result = mvc.perform(get(GET_LIST_URL)
                 .param("page", "1")
                 .param("size", "2")
-                .param("sort", "budget,desc")
+                .param("order", "DESC")
+                .param("sort", "budget")
                 .contentType(MediaType.APPLICATION_JSON))
                 // then
                 .andExpect(status().isOk())

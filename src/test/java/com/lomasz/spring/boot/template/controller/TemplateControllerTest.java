@@ -82,15 +82,15 @@ class TemplateControllerTest {
                 .totalCount(1L)
                 .build();
 
-        when(teamService.search(pageRequest)).thenReturn(searchResult);
+        when(teamService.search(page, limit, sortOrder, sortName)).thenReturn(searchResult);
 
         // when
-        ResponseEntity<SearchResult<TemplateDto>> result = teamController.search(page, limit, sort.toString(), pageRequest);
+        ResponseEntity<SearchResult<TemplateDto>> result = teamController.search(page, limit, sortOrder, sortName);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        verify(teamService, times(1)).search(pageRequest);
+        verify(teamService, times(1)).search(page, limit, sortOrder, sortName);
     }
 
     @Test
