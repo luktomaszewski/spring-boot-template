@@ -9,7 +9,8 @@ import com.lomasz.spring.boot.template.repository.TemplateRepository;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +29,8 @@ public class TemplateService {
         this.templateMapper = templateMapper;
     }
 
-    public SearchResult<TemplateDto> search(Pageable pageable) {
-        Page<TemplateEntity> teamPage = templateRepository.findAll(pageable);
+    public SearchResult<TemplateDto> search(int page, int size, Sort.Direction direction, String sortProperty) {
+        Page<TemplateEntity> teamPage = templateRepository.findAll(PageRequest.of(page, size, direction, sortProperty));
         List<TemplateDto> items = templateMapper.toDtoList(teamPage.getContent());
 
         return SearchResult.<TemplateDto>builder()

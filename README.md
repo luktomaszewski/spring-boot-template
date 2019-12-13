@@ -47,5 +47,5 @@ docker-compose down --remove-orphans
 * `http://localhost:4326/actuator/info` - application basic information
 
 ## API Documentation
-* `http://localhost:4326/v2/api-docs` - API Docs [JSON]
+* `http://localhost:4326/v3/api-docs` - API Docs [JSON]
 * `http://localhost:4326/swagger-ui.html` - Swagger UI

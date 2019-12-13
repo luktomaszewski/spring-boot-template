@@ -4,11 +4,16 @@ import com.lomasz.spring.boot.template.model.dto.NewTemplateDto;
 import com.lomasz.spring.boot.template.model.dto.SearchResult;
 import com.lomasz.spring.boot.template.model.dto.TemplateDto;
 import com.lomasz.spring.boot.template.service.TemplateService;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,25 +39,16 @@ public class TemplateController {
     }
 
     @GetMapping
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<SearchResult<TemplateDto>> search(
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "20") int size,
-            @RequestParam(name = "sort", required = false) String sort,
-            Pageable pageable) {
-        return ResponseEntity.ok(templateService.search(pageable));
+            @RequestParam(name = "order", required = false, defaultValue = "ASC") Sort.Direction direction,
+            @RequestParam(value = "sort", required = false, defaultValue = "name") String sortProperty) {
+        return ResponseEntity.ok(templateService.search(page, size, direction, sortProperty));
     }
 
-    @PostMapping
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> add(@RequestBody @Valid NewTemplateDto newDto) {
         Long id = templateService.create(newDto);
@@ -64,10 +60,8 @@ public class TemplateController {
 
     @GetMapping("/{id}")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema))
     })
     public ResponseEntity<TemplateDto> getById(@PathVariable("id") Long id) {
         return templateService.findById(id)
