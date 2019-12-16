@@ -173,7 +173,6 @@ class TemplateControllerTest {
         assertThat(responseBody.getName()).isEqualTo(templateName);
         assertThat(responseBody.getAcronym()).isEqualTo(templateAcronym);
         assertThat(responseBody.getBudget()).isEqualTo(templateBudget);
-
     }
 
     @Test
@@ -227,7 +226,6 @@ class TemplateControllerTest {
         assertThat(searchResult.getLimit()).isEqualTo(20);
         assertThat(searchResult.getPages()).isEqualTo(1);
         assertThat(searchResult.getItems()).hasSize(3);
-
     }
 
     @Test
@@ -279,6 +277,19 @@ class TemplateControllerTest {
         assertThat(searchResult.getLimit()).isEqualTo(2);
         assertThat(searchResult.getPages()).isEqualTo(2);
         assertThat(searchResult.getItems()).isSortedAccordingTo(Comparator.comparingLong(TemplateDto::getBudget).reversed());
+    }
+
+    @Test
+    void searchWithWrongSortValueShouldReturnHttpStatusBadRequest() throws Exception {
+        // given
+
+        // when
+        mvc.perform(get(GET_LIST_URL)
+                .param("sort", "surname")
+                .contentType(MediaType.APPLICATION_JSON))
+                // then
+                .andExpect(status().isBadRequest());
+
     }
 
     @Test

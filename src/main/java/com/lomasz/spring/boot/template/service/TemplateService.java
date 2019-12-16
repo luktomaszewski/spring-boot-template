@@ -1,5 +1,6 @@
 package com.lomasz.spring.boot.template.service;
 
+import com.lomasz.spring.boot.template.exception.BusinessException;
 import com.lomasz.spring.boot.template.mapper.TemplateMapper;
 import com.lomasz.spring.boot.template.model.dto.NewTemplateDto;
 import com.lomasz.spring.boot.template.model.dto.SearchResult;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,15 +32,20 @@ public class TemplateService {
     }
 
     public SearchResult<TemplateDto> search(int page, int size, Sort.Direction direction, String sortProperty) {
-        Page<TemplateEntity> teamPage = templateRepository.findAll(PageRequest.of(page, size, direction, sortProperty));
-        List<TemplateDto> items = templateMapper.toDtoList(teamPage.getContent());
+        Page<TemplateEntity> resultPage;
+        try {
+            resultPage = templateRepository.findAll(PageRequest.of(page, size, direction, sortProperty));
+        } catch (PropertyReferenceException e){
+            throw new BusinessException("No sort property found: " + e.getPropertyName());
+        }
+        List<TemplateDto> items = templateMapper.toDtoList(resultPage.getContent());
 
         return SearchResult.<TemplateDto>builder()
                 .items(items)
-                .limit(teamPage.getPageable().getPageSize())
-                .page(teamPage.getPageable().getPageNumber())
-                .pages(teamPage.getTotalPages())
-                .totalCount(teamPage.getTotalElements())
+                .limit(resultPage.getPageable().getPageSize())
+                .page(resultPage.getPageable().getPageNumber())
+                .pages(resultPage.getTotalPages())
+                .totalCount(resultPage.getTotalElements())
                 .build();
     }
 

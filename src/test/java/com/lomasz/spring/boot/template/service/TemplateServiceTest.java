@@ -1,5 +1,6 @@
 package com.lomasz.spring.boot.template.service;
 
+import com.lomasz.spring.boot.template.exception.BusinessException;
 import com.lomasz.spring.boot.template.mapper.TemplateMapper;
 import com.lomasz.spring.boot.template.model.dto.NewTemplateDto;
 import com.lomasz.spring.boot.template.model.dto.SearchResult;
@@ -12,9 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mapping.PropertyReferenceException;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +24,9 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -180,6 +183,23 @@ class TemplateServiceTest {
 
         verify(templateRepository, times(1)).findAll(any(Pageable.class));
         verify(templateMapper, times(1)).toDtoList(entityList);
+    }
+
+    @Test
+    void searchWhenWrongSortValueShouldReturnBusinessException() {
+        // given
+        int page = 0;
+        int limit = 5;
+        Sort.Direction sortDirection = Sort.Direction.DESC;
+        String sortBy = "wrongField";
+
+        when(templateRepository.findAll(any(Pageable.class))).thenThrow(PropertyReferenceException.class);
+
+        // when
+        // then
+        assertThrows(BusinessException.class, () -> templateService.search(page, limit, sortDirection, sortBy));
+        verify(templateRepository, times(1)).findAll(any(Pageable.class));
+        verify(templateMapper, never()).toDtoList(anyList());
     }
 
 }

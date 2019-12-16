@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +29,13 @@ import static org.mockito.Mockito.when;
 class TemplateControllerTest {
 
     @Mock
-    private TemplateService teamService;
+    private TemplateService templateService;
 
     @Mock
     private HttpServletRequest request;
 
     @InjectMocks
-    private TemplateController teamController;
+    private TemplateController templateController;
 
     @Test
     void addShouldReturnNewIdInLocationHeaderAndHttpStatusCreated() {
@@ -47,16 +46,16 @@ class TemplateControllerTest {
         NewTemplateDto newTemplateDto = new NewTemplateDto(name, acronym, 182005000L);
 
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-        when(teamService.create(newTemplateDto)).thenReturn(id);
+        when(templateService.create(newTemplateDto)).thenReturn(id);
 
         // when
-        ResponseEntity<Void> result = teamController.add(newTemplateDto);
+        ResponseEntity<Void> result = templateController.add(newTemplateDto);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(Objects.requireNonNull(result.getHeaders().get("Location")).get(0)).isEqualTo("/api/" + id);
 
-        verify(teamService, times(1)).create(newTemplateDto);
+        verify(templateService, times(1)).create(newTemplateDto);
     }
 
     @Test
@@ -66,9 +65,6 @@ class TemplateControllerTest {
         int limit = 5;
         String sortName = "name";
         Sort.Direction sortOrder = Sort.Direction.DESC;
-        Sort sort = Sort.by(sortOrder, sortName);
-
-        PageRequest pageRequest = PageRequest.of(page, limit, sort);
 
         TemplateDto templateDto = new TemplateDto();
         templateDto.setId(1L);
@@ -82,35 +78,35 @@ class TemplateControllerTest {
                 .totalCount(1L)
                 .build();
 
-        when(teamService.search(page, limit, sortOrder, sortName)).thenReturn(searchResult);
+        when(templateService.search(page, limit, sortOrder, sortName)).thenReturn(searchResult);
 
         // when
-        ResponseEntity<SearchResult<TemplateDto>> result = teamController.search(page, limit, sortOrder, sortName);
+        ResponseEntity<SearchResult<TemplateDto>> result = templateController.search(page, limit, sortOrder, sortName);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        verify(teamService, times(1)).search(page, limit, sortOrder, sortName);
+        verify(templateService, times(1)).search(page, limit, sortOrder, sortName);
     }
 
     @Test
-    void getByIdWhenTeamDoesntExistShouldReturnHttpStatusNotFound() {
+    void getByIdWhenDoesntExistTeamDoesntExistShouldReturnHttpStatusNotFound() {
         // given
         Long id = 1L;
 
-        when(teamService.findById(id)).thenReturn(Optional.empty());
+        when(templateService.findById(id)).thenReturn(Optional.empty());
 
         // when
-        ResponseEntity<TemplateDto> result = teamController.getById(id);
+        ResponseEntity<TemplateDto> result = templateController.getById(id);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
-        verify(teamService, times(1)).findById(id);
+        verify(templateService, times(1)).findById(id);
     }
 
     @Test
-    void getByIdWhenTeamExistsShouldReturnHttpStatusNotFound() {
+    void getByIdWhenTeamExistsShouldReturnTemplateDtoWithHttpStatusOk() {
         // given
         Long id = 1L;
 
@@ -120,15 +116,15 @@ class TemplateControllerTest {
         templateDto.setAcronym("NA");
         templateDto.setBudget(182005000L);
 
-        when(teamService.findById(id)).thenReturn(Optional.of(templateDto));
+        when(templateService.findById(id)).thenReturn(Optional.of(templateDto));
 
         // when
-        ResponseEntity<TemplateDto> result = teamController.getById(id);
+        ResponseEntity<TemplateDto> result = templateController.getById(id);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(result.getBody()).isEqualTo(templateDto);
 
-        verify(teamService, times(1)).findById(id);
+        verify(templateService, times(1)).findById(id);
     }
 }
