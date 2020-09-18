@@ -7,6 +7,7 @@ import com.lomasz.spring.boot.template.model.dto.SearchResult;
 import com.lomasz.spring.boot.template.model.dto.TemplateDto;
 import com.lomasz.spring.boot.template.model.entity.TemplateEntity;
 import com.lomasz.spring.boot.template.repository.TemplateRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,16 +21,11 @@ import java.util.Optional;
 
 @Service
 @CommonsLog
+@RequiredArgsConstructor
 public class TemplateService {
 
     private final TemplateRepository templateRepository;
     private final TemplateMapper templateMapper;
-
-    @Autowired
-    public TemplateService(TemplateRepository templateRepository, TemplateMapper templateMapper) {
-        this.templateRepository = templateRepository;
-        this.templateMapper = templateMapper;
-    }
 
     public SearchResult<TemplateDto> search(int page, int size, Sort.Direction direction, String sortProperty) {
         Page<TemplateEntity> resultPage;
