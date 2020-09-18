@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,14 +27,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class TemplateController {
 
     private final TemplateService templateService;
-
-    @Autowired
-    public TemplateController(TemplateService templateService) {
-        this.templateService = templateService;
-    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
