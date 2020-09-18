@@ -35,7 +35,7 @@ class TemplateControllerTest {
     private HttpServletRequest request;
 
     @InjectMocks
-    private TemplateController templateController;
+    private TemplateController sut;
 
     @Test
     void addShouldReturnNewIdInLocationHeaderAndHttpStatusCreated() {
@@ -49,7 +49,7 @@ class TemplateControllerTest {
         when(templateService.create(newTemplateDto)).thenReturn(id);
 
         // when
-        ResponseEntity<Void> result = templateController.add(newTemplateDto);
+        ResponseEntity<Void> result = sut.add(newTemplateDto);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -81,7 +81,7 @@ class TemplateControllerTest {
         when(templateService.search(page, limit, sortOrder, sortName)).thenReturn(searchResult);
 
         // when
-        ResponseEntity<SearchResult<TemplateDto>> result = templateController.search(page, limit, sortOrder, sortName);
+        ResponseEntity<SearchResult<TemplateDto>> result = sut.search(page, limit, sortOrder, sortName);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -97,7 +97,7 @@ class TemplateControllerTest {
         when(templateService.findById(id)).thenReturn(Optional.empty());
 
         // when
-        ResponseEntity<TemplateDto> result = templateController.getById(id);
+        ResponseEntity<TemplateDto> result = sut.getById(id);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -119,7 +119,7 @@ class TemplateControllerTest {
         when(templateService.findById(id)).thenReturn(Optional.of(templateDto));
 
         // when
-        ResponseEntity<TemplateDto> result = templateController.getById(id);
+        ResponseEntity<TemplateDto> result = sut.getById(id);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
