@@ -3,6 +3,7 @@ package com.lomasz.spring.boot.template.integration;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lomasz.spring.boot.template.filter.RequestIdFilter;
+import com.lomasz.spring.boot.template.model.dto.ErrorDto;
 import com.lomasz.spring.boot.template.model.dto.NewTemplateDto;
 import com.lomasz.spring.boot.template.model.dto.SearchResult;
 import com.lomasz.spring.boot.template.model.dto.TemplateDto;
@@ -22,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -119,11 +121,19 @@ class TemplateControllerTest {
         NewTemplateDto johnDoe = new NewTemplateDto(templateName, templateAcronym, templateBudget);
 
         // when
-        mvc.perform(post(CREATE_URL)
+        MvcResult result = mvc.perform(post(CREATE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        List<ErrorDto> responseBody = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<ErrorDto>>(){});
+
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody).hasSize(1);
+        assertThat(responseBody.get(0).getMessage()).isEqualTo("Wrong value in the field: budget");
+        assertThat(responseBody.get(0).getDetails()).isEqualTo("The value must be positive");
     }
 
     @Test
@@ -132,16 +142,24 @@ class TemplateControllerTest {
         // given
         String templateName = "John Doe";
         String templateAcronym = "JOHN DOE";
-        Long templateBudget = -182005000L;
+        Long templateBudget = 182005000L;
 
         NewTemplateDto johnDoe = new NewTemplateDto(templateName, templateAcronym, templateBudget);
 
         // when
-        mvc.perform(post(CREATE_URL)
+        MvcResult result = mvc.perform(post(CREATE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        List<ErrorDto> responseBody = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<ErrorDto>>(){});
+
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody).hasSize(1);
+        assertThat(responseBody.get(0).getMessage()).isEqualTo("Wrong value in the field: acronym");
+        assertThat(responseBody.get(0).getDetails()).isEqualTo("size must be between 0 and 5");
     }
 
     @Test
