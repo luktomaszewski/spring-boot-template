@@ -21,7 +21,7 @@ sourceCompatibility = "1.8"
 
 repositories {
     mavenCentral()
-    maven { url "http://oss.jfrog.org/artifactory/oss-snapshot-local/" }
+    maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local/" }
 }
 
 dependencies {
@@ -42,7 +42,7 @@ dependencies {
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
 
-    runtime "com.h2database:h2:1.4.200"
+    runtimeOnly "com.h2database:h2:1.4.200"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
