@@ -1,7 +1,7 @@
 # Spring Boot Template 
 ![CI Status](https://github.com/lomasz/spring-boot-template/workflows/CI/badge.svg)
 
-* Spring Boot 2.2.2.RELEASE + Web + JPA + REST
+* Spring Boot + Web + JPA + REST
 * Gradle Wrapper
 * Lombok
 * MapStruct
