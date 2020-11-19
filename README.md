@@ -1,5 +1,6 @@
 # Spring Boot Template 
 ![CI Status](https://github.com/lomasz/spring-boot-template/workflows/CI/badge.svg)
+![CodeQL Status](https://github.com/lomasz/spring-boot-template/workflows/CodeQL/badge.svg)
 
 * Spring Boot + Web + JPA + REST
 * Gradle Wrapper
