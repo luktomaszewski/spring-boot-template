@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/java:11
+FROM openjdk:11.0.7-jre-slim
 
 LABEL maintainer="lomasz"
 LABEL name="Spring Boot Template"
