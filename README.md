@@ -49,4 +49,5 @@ docker-compose down --remove-orphans
 
 ## API Documentation
 * `http://localhost:4326/v3/api-docs` - API Docs [JSON]
+* `http://localhost:4326/v3/api-docs.yaml` - API Docs [YAML]
 * `http://localhost:4326/swagger-ui.html` - Swagger UI
