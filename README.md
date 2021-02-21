@@ -13,14 +13,22 @@
 
 ## How to reuse template
 
-* `settings.gradle`: change **`rootProject.name`** value
-* `build.gradle`: change **`group`** value
-* `src/main`: rename main package value 
-* `application.properties`: change **`server.port`** value
-* `docker-compose.yml`:
-    * change image name
-    * change port mapping
-* `SwaggerConfig.java`: change description in **`swaggerApi()`** and **`CONTACT`**
+* [`settings.gradle`](settings.gradle):
+  * change **`rootProject.name`** value
+* [`build.gradle`](build.gradle):
+  * change **`group`** value
+* [`OpenApiConfig.java`](src/main/java/com/lomasz/spring/boot/template/config/OpenApiConfig.java):
+  * change description in **`swaggerApi()`** and **`CONTACT`**
+* [`src/main`](src/main):
+  * rename main package value
+* [`application.properties`](src/main/resources/application.properties):
+  * change **`server.port`** value
+* [`Dockerfile`](Dockerfile):
+  * modify all labels values
+  * set `EXPOSE` value
+* [`docker-compose.yml`](docker-compose.yml):
+  * change image name
+  * change port mapping
 
 ## How to run application
 
