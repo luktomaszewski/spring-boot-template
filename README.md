@@ -38,17 +38,10 @@
 ```
 
 #### using docker-compose
-*REQUIRED: Docker running*
+*:warning: REQUIRED: :whale2: Docker running*
 
-###### Start
 ```bash
-./gradlew clean build
 docker-compose up --build -d
-```
-
-###### Stop
-```bash
-docker-compose down --remove-orphans
 ```
 
 ## Actuator
