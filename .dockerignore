@@ -1,0 +1,7 @@
+.git
+.github
+.cache
+.idea
+**/*.class
+*.md
+!README*.md
