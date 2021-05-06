@@ -29,7 +29,11 @@
 * [`docker-compose.yml`](docker-compose.yml):
   * change image name
   * change port mapping
-
+* [`pod.yml`](pod.yml):
+  * rename file
+  * change container name
+  * change container image
+  
 ## How to run application
 
 #### using gradle wrapper
@@ -42,6 +46,15 @@
 
 ```bash
 docker-compose up --build -d
+```
+
+#### using k8s
+*:warning: REQUIRED: Kubernetes running*
+
+```bash
+docker build spring-boot-template:latest
+kubectl apply -f pod.yml
+kubectl port-forward spring-boot-template 4326:4326
 ```
 
 ## Actuator
