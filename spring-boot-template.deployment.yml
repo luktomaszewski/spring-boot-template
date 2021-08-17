@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: spring-boot-template
+  name: spring-boot-template
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-template
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: spring-boot-template
+    spec:
+      containers:
+        - image: spring-boot-template:latest
+          name: spring-boot-template
+          ports:
+            - containerPort: 4326
+          resources: {}
+      restartPolicy: Always
+status: {}
