@@ -1,4 +1,4 @@
-FROM gradle:6.6.1-jdk11-hotspot AS builder
+FROM gradle:7.5.1-jdk17 AS builder
 
 WORKDIR /home/gradle/src
 
@@ -6,7 +6,7 @@ COPY . .
 
 RUN gradle jar
 
-FROM openjdk:11.0.7-jre-slim AS runtime
+FROM eclipse-temurin:17-jre-jammy AS runtime
 
 RUN groupadd -r geogeeks && useradd -r -s /bin/false -g geogeeks geogeek
 

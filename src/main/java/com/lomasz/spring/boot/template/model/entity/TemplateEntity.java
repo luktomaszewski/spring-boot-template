@@ -1,5 +1,6 @@
 package com.lomasz.spring.boot.template.model.entity;
 
+import java.io.Serial;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Entity
 public class TemplateEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 5994238256683599906L;
 
     private static final String SEQUENCE_NAME = "template_seq";

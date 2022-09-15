@@ -1,5 +1,6 @@
 package com.lomasz.spring.boot.template.exception;
 
+import java.io.Serial;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -7,6 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class BusinessException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = -2582819800646135357L;
 
     public BusinessException(String message, Throwable cause) {

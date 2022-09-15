@@ -1,5 +1,12 @@
 package com.lomasz.spring.boot.template.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lomasz.spring.boot.template.filter.RequestIdFilter;
@@ -9,6 +16,10 @@ import com.lomasz.spring.boot.template.model.dto.SearchResult;
 import com.lomasz.spring.boot.template.model.dto.TemplateDto;
 import com.lomasz.spring.boot.template.model.entity.TemplateEntity;
 import com.lomasz.spring.boot.template.repository.TemplateRepository;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,25 +32,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.transaction.Transactional;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TemplateControllerTest {
 
-    private static final String GET_LIST_URL = "/api";
-    private static final String GET_BY_ID_URL = "/api/{id}";
-    private static final String CREATE_URL = "/api";
+    private static final String GET_LIST_URL = "/api/templates";
+    private static final String GET_BY_ID_URL = "/api/templates/{id}";
+    private static final String CREATE_URL = "/api/templates";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -57,10 +56,7 @@ class TemplateControllerTest {
 
     @BeforeEach
     void setUp() {
-        mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .addFilter(requestIdFilter)
-                .build();
+        mvc = MockMvcBuilders.webAppContextSetup(context).addFilter(requestIdFilter).build();
     }
 
     @Test
@@ -74,15 +70,16 @@ class TemplateControllerTest {
         NewTemplateDto johnDoe = new NewTemplateDto(name, acronym, budget);
 
         // when
-        MvcResult result = mvc.perform(post(CREATE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(johnDoe)))
-                // then
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"))
-                .andReturn();
+        MvcResult result = mvc.perform(
+                post(CREATE_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(johnDoe)))
+            // then
+            .andExpect(status().isCreated()).andExpect(header().exists("Location")).andReturn();
 
-        Long id = Long.valueOf(result.getResponse().getHeader("Location").split("/")[4]);
+        String location = result.getResponse().getHeader("Location");
+
+        assertThat(location).isNotNull();
+
+        Long id = Long.valueOf(location.substring(location.lastIndexOf("/") + 1));
 
         Optional<TemplateEntity> savedTemplate = templateRepository.findById(id);
 
@@ -103,11 +100,9 @@ class TemplateControllerTest {
         NewTemplateDto johnDoe = new NewTemplateDto(templateName, null, templateBudget);
 
         // when
-        mvc.perform(post(CREATE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(johnDoe)))
-                // then
-                .andExpect(status().isBadRequest());
+        mvc.perform(post(CREATE_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(johnDoe)))
+            // then
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -121,14 +116,14 @@ class TemplateControllerTest {
         NewTemplateDto johnDoe = new NewTemplateDto(templateName, templateAcronym, templateBudget);
 
         // when
-        MvcResult result = mvc.perform(post(CREATE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(johnDoe)))
-                // then
-                .andExpect(status().isBadRequest())
-                .andReturn();
+        MvcResult result = mvc.perform(
+                post(CREATE_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(johnDoe)))
+            // then
+            .andExpect(status().isBadRequest()).andReturn();
 
-        List<ErrorDto> responseBody = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<ErrorDto>>(){});
+        List<ErrorDto> responseBody = objectMapper.readValue(result.getResponse().getContentAsString(),
+            new TypeReference<List<ErrorDto>>() {
+            });
 
         assertThat(responseBody).isNotNull();
         assertThat(responseBody).hasSize(1);
@@ -147,14 +142,14 @@ class TemplateControllerTest {
         NewTemplateDto johnDoe = new NewTemplateDto(templateName, templateAcronym, templateBudget);
 
         // when
-        MvcResult result = mvc.perform(post(CREATE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(johnDoe)))
-                // then
-                .andExpect(status().isBadRequest())
-                .andReturn();
+        MvcResult result = mvc.perform(
+                post(CREATE_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(johnDoe)))
+            // then
+            .andExpect(status().isBadRequest()).andReturn();
 
-        List<ErrorDto> responseBody = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<ErrorDto>>(){});
+        List<ErrorDto> responseBody = objectMapper.readValue(result.getResponse().getContentAsString(),
+            new TypeReference<List<ErrorDto>>() {
+            });
 
         assertThat(responseBody).isNotNull();
         assertThat(responseBody).hasSize(1);
@@ -179,11 +174,9 @@ class TemplateControllerTest {
         Long id = savedEntity.getId();
 
         // when
-        MvcResult result = mvc.perform(get(GET_BY_ID_URL, id)
-                .contentType(MediaType.APPLICATION_JSON))
-                // then
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mvc.perform(get(GET_BY_ID_URL, id).contentType(MediaType.APPLICATION_JSON))
+            // then
+            .andExpect(status().isOk()).andReturn();
 
         TemplateDto responseBody = objectMapper.readValue(result.getResponse().getContentAsString(), TemplateDto.class);
 
@@ -199,10 +192,9 @@ class TemplateControllerTest {
         Long id = 99L;
 
         // when
-        mvc.perform(get(GET_BY_ID_URL, id)
-                .contentType(MediaType.APPLICATION_JSON))
-                // then
-                .andExpect(status().isNotFound());
+        mvc.perform(get(GET_BY_ID_URL, id).contentType(MediaType.APPLICATION_JSON))
+            // then
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -229,15 +221,13 @@ class TemplateControllerTest {
         templateRepository.save(juanitoPerez);
 
         // when
-        MvcResult result = mvc.perform(get(GET_LIST_URL)
-                .contentType(MediaType.APPLICATION_JSON))
-                // then
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mvc.perform(get(GET_LIST_URL).contentType(MediaType.APPLICATION_JSON))
+            // then
+            .andExpect(status().isOk()).andReturn();
 
-        SearchResult<TemplateDto> searchResult = objectMapper
-                .readValue(result.getResponse().getContentAsString(), new TypeReference<SearchResult<TemplateDto>>() {
-                });
+        SearchResult<TemplateDto> searchResult = objectMapper.readValue(result.getResponse().getContentAsString(),
+            new TypeReference<SearchResult<TemplateDto>>() {
+            });
 
         assertThat(searchResult.getTotalCount()).isEqualTo(3);
         assertThat(searchResult.getPage()).isEqualTo(0);
@@ -276,19 +266,15 @@ class TemplateControllerTest {
         templateRepository.save(pierreEtPaul);
 
         // when
-        MvcResult result = mvc.perform(get(GET_LIST_URL)
-                .param("page", "1")
-                .param("size", "2")
-                .param("order", "DESC")
-                .param("sort", "budget")
-                .contentType(MediaType.APPLICATION_JSON))
-                // then
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mvc.perform(
+                get(GET_LIST_URL).param("page", "1").param("size", "2").param("order", "DESC").param("sort", "budget")
+                    .contentType(MediaType.APPLICATION_JSON))
+            // then
+            .andExpect(status().isOk()).andReturn();
 
-        SearchResult<TemplateDto> searchResult = objectMapper
-                .readValue(result.getResponse().getContentAsString(), new TypeReference<SearchResult<TemplateDto>>() {
-                });
+        SearchResult<TemplateDto> searchResult = objectMapper.readValue(result.getResponse().getContentAsString(),
+            new TypeReference<SearchResult<TemplateDto>>() {
+            });
 
         assertThat(searchResult.getTotalCount()).isEqualTo(4);
         assertThat(searchResult.getPage()).isEqualTo(1);
@@ -302,11 +288,9 @@ class TemplateControllerTest {
         // given
 
         // when
-        mvc.perform(get(GET_LIST_URL)
-                .param("sort", "surname")
-                .contentType(MediaType.APPLICATION_JSON))
-                // then
-                .andExpect(status().isBadRequest());
+        mvc.perform(get(GET_LIST_URL).param("sort", "surname").contentType(MediaType.APPLICATION_JSON))
+            // then
+            .andExpect(status().isBadRequest());
 
     }
 
@@ -316,11 +300,9 @@ class TemplateControllerTest {
         String requestId = "requestId";
 
         // when
-        mvc.perform(get(GET_LIST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Request-ID", requestId))
-                // then
-                .andExpect(header().string("X-Request-ID", requestId));
+        mvc.perform(get(GET_LIST_URL).contentType(MediaType.APPLICATION_JSON).header("X-Request-ID", requestId))
+            // then
+            .andExpect(header().string("X-Request-ID", requestId));
     }
 
     @Test
@@ -328,10 +310,9 @@ class TemplateControllerTest {
         // given
 
         // when
-        mvc.perform(get(GET_LIST_URL)
-                .contentType(MediaType.APPLICATION_JSON))
-                // then
-                .andExpect(header().exists("X-Request-ID"));
+        mvc.perform(get(GET_LIST_URL).contentType(MediaType.APPLICATION_JSON))
+            // then
+            .andExpect(header().exists("X-Request-ID"));
     }
 
 }

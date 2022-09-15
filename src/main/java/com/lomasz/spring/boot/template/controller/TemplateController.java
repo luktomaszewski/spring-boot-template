@@ -26,7 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/templates")
 @RequiredArgsConstructor
 public class TemplateController {
 
@@ -35,10 +35,10 @@ public class TemplateController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<SearchResult<TemplateDto>> search(
-            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(name = "size", required = false, defaultValue = "20") int size,
-            @RequestParam(name = "order", required = false, defaultValue = "ASC") Sort.Direction direction,
-            @RequestParam(value = "sort", required = false, defaultValue = "name") String sortProperty) {
+        @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+        @RequestParam(name = "size", required = false, defaultValue = "20") int size,
+        @RequestParam(name = "order", required = false, defaultValue = "ASC") Sort.Direction direction,
+        @RequestParam(value = "sort", required = false, defaultValue = "name") String sortProperty) {
         return ResponseEntity.ok(templateService.search(page, size, direction, sortProperty));
     }
 
@@ -47,19 +47,19 @@ public class TemplateController {
     public ResponseEntity<Void> add(@RequestBody @Valid NewTemplateDto newDto) {
         Long id = templateService.create(newDto);
         return ResponseEntity.created(ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/api/{id}").build()
+                .fromCurrentContextPath().path("/api/templates/{id}").build()
                 .expand(id).toUri())
-                .build();
+            .build();
     }
 
     @GetMapping("/{id}")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200"),
-            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema))
+        @ApiResponse(responseCode = "200"),
+        @ApiResponse(responseCode = "404", content = @Content(schema = @Schema))
     })
     public ResponseEntity<TemplateDto> getById(@PathVariable("id") Long id) {
         return templateService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

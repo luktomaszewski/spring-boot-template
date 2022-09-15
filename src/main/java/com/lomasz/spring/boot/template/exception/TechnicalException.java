@@ -1,5 +1,6 @@
 package com.lomasz.spring.boot.template.exception;
 
+import java.io.Serial;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -7,6 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class TechnicalException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = -649385970025987816L;
 
     public TechnicalException(String message, Throwable cause) {

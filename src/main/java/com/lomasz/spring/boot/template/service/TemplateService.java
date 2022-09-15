@@ -30,18 +30,18 @@ public class TemplateService {
         Page<TemplateEntity> resultPage;
         try {
             resultPage = templateRepository.findAll(PageRequest.of(page, size, direction, sortProperty));
-        } catch (PropertyReferenceException e){
+        } catch (PropertyReferenceException e) {
             throw new BusinessException("No sort property found: " + e.getPropertyName());
         }
         List<TemplateDto> items = templateMapper.toDtoList(resultPage.getContent());
 
         return SearchResult.<TemplateDto>builder()
-                .items(items)
-                .limit(resultPage.getPageable().getPageSize())
-                .page(resultPage.getPageable().getPageNumber())
-                .pages(resultPage.getTotalPages())
-                .totalCount(resultPage.getTotalElements())
-                .build();
+            .items(items)
+            .limit(resultPage.getPageable().getPageSize())
+            .page(resultPage.getPageable().getPageNumber())
+            .pages(resultPage.getTotalPages())
+            .totalCount(resultPage.getTotalElements())
+            .build();
     }
 
     public Long create(NewTemplateDto newDto) {
@@ -53,7 +53,7 @@ public class TemplateService {
 
     public Optional<TemplateDto> findById(Long id) {
         return templateRepository.findById(id)
-                .map(templateMapper::toDto);
+            .map(templateMapper::toDto);
     }
 
 }
