@@ -1,0 +1,12 @@
+image:
+  repository: spring-boot-template
+  pullPolicy: Never
+  tag: "latest"
+
+healthCheck:
+  path: "/actuator/health"
+
+service:
+  port: 4326
+
+env:
