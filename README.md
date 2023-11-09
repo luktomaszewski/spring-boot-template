@@ -24,7 +24,11 @@
 
 ## :rocket: Getting started
 
-You can run `make` to see a list of available commands.
+To see a list of available commands, run command:
+
+```bash
+make
+```
 
 ## How to reuse template
 
