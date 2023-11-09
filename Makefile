@@ -54,3 +54,24 @@ debug-pod: ## debug pod
 .PHONY: port-forward
 port-forward: ## make port forward to k8s service
 	kubectl port-forward -n $(NAMESPACE) svc/$(APP_NAME) $(APP_PORT):$(APP_PORT)
+
+#-- localstack:
+AWS_ECR_URI=localhost.localstack.cloud:4510
+DOCKER_ECR_TAG="$(AWS_ECR_URI)/$(APP_NAME)"
+
+.PHONY: ecr-login
+ecr-login: ## Login to ECR
+	awslocal ecr get-login-password | docker login --username AWS --password-stdin $(AWS_ECR_URI)
+
+.PHONY: ecr-publish
+ecr-publish: build ecr-login ## Publish docker image to ECR
+	docker tag $(APP_NAME):latest $(DOCKER_ECR_TAG):latest
+	docker push $(DOCKER_ECR_TAG):latest
+
+.PHONY: ecr-images
+ecr-images: ## List docker images in ECR
+	awslocal ecr describe-images --repository-name $(APP_NAME)
+
+.PHONY: helm-install-localstack
+helm-install-localstack: ## install helm chart in ECR on LocalStack
+	helm upgrade -i $(APP_NAME) helm-chart -n $(NAMESPACE) --values localstack.yaml --create-namespace

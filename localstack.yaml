@@ -1,0 +1,10 @@
+image:
+  repository: localhost.localstack.cloud:4510/spring-boot-template
+  pullPolicy: Always
+  tag: "latest"
+
+healthCheck:
+  path: "/actuator/health"
+
+service:
+  port: 4326
