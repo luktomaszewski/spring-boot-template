@@ -1,11 +1,30 @@
+.env*
+
+HELP.md
 .gradle
 build/
+target/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+logs/
 
-### STS ###
 ### IntelliJ IDEA ###
 .idea
-### NetBeans ###
+*.iws
+*.iml
+*.ipr
+out/
+
 ### VS Code ###
+.vscode/
+
+# Helm
+*.tgz
+charts/
+node_modules/
+.settings/
+bin/
+
+### MacOS ###
+.DC_Store

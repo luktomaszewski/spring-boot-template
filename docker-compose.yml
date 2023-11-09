@@ -2,9 +2,26 @@ version: '3.9'
 
 services:
 
-  spring-boot-template:
+  builder:
+    image: spring-boot-template:builder
+    container_name: spring-boot-template-builder
+    build:
+      context: .
+      dockerfile: builder.Dockerfile
+    volumes:
+      - output-volume:/app
+      - build-cache:/root/.gradle/caches/
+
+  app:
+    image: spring-boot-template:latest
+    container_name: spring-boot-template
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "4326:4326"
+
+volumes:
+  build-cache:
+  output-volume:
+    name: ${OUTPUT_VOLUME_NAME:-spring-boot-template_default-output-volume}
