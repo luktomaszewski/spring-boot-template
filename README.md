@@ -21,6 +21,7 @@
 * `pre-commit`
 * `hadolint`
 * `jq`
+* `awslocal`
 
 ## :rocket: Getting started
 
@@ -29,35 +30,6 @@ To see a list of available commands, run command:
 ```bash
 make
 ```
-
-## How to reuse template
-
-- [ ] [`settings.gradle`](settings.gradle):
-  * change **`rootProject.name`** value
-- [ ] [`build.gradle`](build.gradle):
-  * change **`group`** value
-- [ ] [`OpenApiConfig.java`](src/main/java/com/lomasz/spring/boot/template/config/OpenApiConfig.java):
-  * change description in **`swaggerApi()`** and **`CONTACT`**
-- [ ] [`src/main`](src/main):
-  * rename main package value
-- [ ] [`application.properties`](src/main/resources/application.properties):
-  * change **`server.port`** value
-- [ ] [`Dockerfile`](Dockerfile):
-  * modify all labels values
-  * set `EXPOSE` value
-- [ ] [`docker-compose.yml`](docker-compose.yml):
-  * change image name
-  * change port mapping
-- [ ] [`docker-compose.yml`](docker-compose.yml):
-  * change image name
-  * change port mapping
-- [ ] [`values.yaml`](values.yaml)
-  * change `service.port` value
-  * change
-- [ ] [`Makefile`](Makefile)
-  * change `NAMESPACE` value
-  * change `APP_NAME` value
-  * change `APP_PORT` value
 
 ## Actuator
 
@@ -69,3 +41,40 @@ make
 * [`http://localhost:4326/v3/api-docs`](http://localhost:4326/v3/api-docs) - API Docs [JSON]
 * [`http://localhost:4326/v3/api-docs.yaml`](http://localhost:4326/v3/api-docs.yaml) - API Docs [YAML]
 * [`http://localhost:4326/swagger-ui.html`](http://localhost:4326/swagger-ui.html) - Swagger UI
+
+## How to reuse template
+
+### Spring Boot
+
+- [ ] [`settings.gradle`](settings.gradle):
+  * change **`rootProject.name`** value
+- [ ] [`build.gradle`](build.gradle):
+  * change **`group`** value
+- [ ] [`OpenApiConfig.java`](src/main/java/com/lomasz/spring/boot/template/config/OpenApiConfig.java):
+  * change description in **`swaggerApi()`** and **`CONTACT`**
+- [ ] [`src/main`](src/main):
+  * rename main package value
+- [ ] [`application.properties`](src/main/resources/application.properties):
+  * change **`server.port`** value
+
+### Docker
+
+- [ ] [`docker-compose.yml`](docker-compose.yml):
+  * change image name
+  * change port mapping
+
+### Helm
+
+- [ ] [`values.yaml`](values.yaml)
+  * change `image.repository` value
+  * change `service.port` value
+- [ ] [`localstack.yaml`](localstack.yaml)
+  * change `image.repository` value
+  * change `service.port` value
+
+### Make
+
+- [ ] [`Makefile`](Makefile)
+  * change `NAMESPACE` value
+  * change `APP_NAME` value
+  * change `APP_PORT` value
