@@ -38,6 +38,10 @@ destroy: ## remove the app and all containers, images and volumes
 helm-install: ## install helm chart
 	helm upgrade -i $(APP_NAME) helm-chart -n $(NAMESPACE) --values values.yaml --create-namespace
 
+.PHONY: helm-delete
+helm-delete: ## uninstall helm chart
+	helm delete $(APP_NAME) -n $(APP_NAME) -f
+
 .PHONY: helm-lint
 helm-lint: ## lint helm chart
 	helm lint helm-chart
