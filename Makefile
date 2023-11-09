@@ -12,7 +12,7 @@ help:
 
 #-- docker/docker-compose:
 .PHONY: up
-up: ## start the application
+up: ## start the app
 	docker-compose up $(APP_SERVICE_NAME)
 
 .PHONY: down
@@ -20,7 +20,7 @@ down: ## stop the app, any running contains, and networking
 	docker-compose down
 
 .PHONY: debug
-debug: ## debug the service container by running docker and shelling into it
+debug: ## debug the service container with app by running docker and shelling into it
 	docker exec -it $(APP_SERVICE_NAME) //bin/bash
 
 .PHONY: build
@@ -35,12 +35,12 @@ destroy: ## remove the app and all containers, images and volumes
 #-- helm/k8s:
 
 .PHONY: helm-install
-helm-install: ## install helm chart
+helm-install: ## install helm chart (default)
 	helm upgrade -i $(APP_NAME) helm-chart -n $(NAMESPACE) --values values.yaml --create-namespace
 
 .PHONY: helm-delete
 helm-delete: ## uninstall helm chart
-	helm delete $(APP_NAME) -n $(APP_NAME) -f
+	helm delete $(APP_NAME) -n $(APP_NAME)
 
 .PHONY: helm-lint
 helm-lint: ## lint helm chart
@@ -60,18 +60,18 @@ AWS_ECR_URI=localhost.localstack.cloud:4510
 DOCKER_ECR_TAG="$(AWS_ECR_URI)/$(APP_NAME)"
 
 .PHONY: ecr-login
-ecr-login: ## Login to ECR
+ecr-login: ## login to ECR
 	awslocal ecr get-login-password | docker login --username AWS --password-stdin $(AWS_ECR_URI)
 
 .PHONY: ecr-publish
-ecr-publish: build ecr-login ## Publish docker image to ECR
+ecr-publish: build ecr-login ## publish docker image to ECR
 	docker tag $(APP_NAME):latest $(DOCKER_ECR_TAG):latest
 	docker push $(DOCKER_ECR_TAG):latest
 
 .PHONY: ecr-images
-ecr-images: ## List docker images in ECR
+ecr-images: ## list docker images in ECR repository
 	awslocal ecr describe-images --repository-name $(APP_NAME)
 
 .PHONY: helm-install-localstack
-helm-install-localstack: ## install helm chart in ECR on LocalStack
+helm-install-localstack: ## install helm chart on EKS in LocalStack
 	helm upgrade -i $(APP_NAME) helm-chart -n $(NAMESPACE) --values localstack.yaml --create-namespace
