@@ -3,7 +3,7 @@ repos:
     rev: "v4.4.0"
     hooks:
       - id: check-yaml
-        name: check-yaml (default)
+        name: check-yaml
         args: [ --allow-multiple-documents ]
         exclude: ^helm-chart\/templates\/.*$
       - id: check-json

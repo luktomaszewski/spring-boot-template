@@ -44,4 +44,3 @@ public class GlobalExceptionHandler {
             .body(Collections.singletonList(new ErrorDto(exception.getMessage())));
     }
 }
-
