@@ -1,9 +1,18 @@
 package com.lomasz.spring.boot.template.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.lomasz.spring.boot.template.model.dto.NewTemplateDto;
 import com.lomasz.spring.boot.template.model.dto.SearchResult;
 import com.lomasz.spring.boot.template.model.dto.TemplateDto;
 import com.lomasz.spring.boot.template.service.TemplateService;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,16 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TemplateControllerTest {
@@ -53,7 +52,8 @@ class TemplateControllerTest {
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(Objects.requireNonNull(result.getHeaders().get("Location")).get(0)).isEqualTo("/api/templates/" + id);
+        assertThat(Objects.requireNonNull(result.getHeaders().get("Location")).get(0))
+                .isEqualTo("/api/templates/" + id);
 
         verify(templateService, times(1)).create(newTemplateDto);
     }
@@ -71,12 +71,7 @@ class TemplateControllerTest {
         templateDto.setName("name");
 
         SearchResult<TemplateDto> searchResult = SearchResult.<TemplateDto>builder()
-            .items(Collections.singletonList(templateDto))
-            .limit(limit)
-            .page(page)
-            .pages(1)
-            .totalCount(1L)
-            .build();
+                .items(Collections.singletonList(templateDto)).limit(limit).page(page).pages(1).totalCount(1L).build();
 
         when(templateService.search(page, limit, sortOrder, sortName)).thenReturn(searchResult);
 

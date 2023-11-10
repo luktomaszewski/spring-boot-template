@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping("/api/templates")
 @RequiredArgsConstructor
@@ -35,10 +34,10 @@ public class TemplateController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<SearchResult<TemplateDto>> search(
-        @RequestParam(name = "page", required = false, defaultValue = "0") int page,
-        @RequestParam(name = "size", required = false, defaultValue = "20") int size,
-        @RequestParam(name = "order", required = false, defaultValue = "ASC") Sort.Direction direction,
-        @RequestParam(value = "sort", required = false, defaultValue = "name") String sortProperty) {
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "20") int size,
+            @RequestParam(name = "order", required = false, defaultValue = "ASC") Sort.Direction direction,
+            @RequestParam(value = "sort", required = false, defaultValue = "name") String sortProperty) {
         return ResponseEntity.ok(templateService.search(page, size, direction, sortProperty));
     }
 
@@ -46,20 +45,14 @@ public class TemplateController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> add(@RequestBody @Valid NewTemplateDto newDto) {
         Long id = templateService.create(newDto);
-        return ResponseEntity.created(ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/api/templates/{id}").build()
-                .expand(id).toUri())
-            .build();
+        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/templates/{id}")
+                .build().expand(id).toUri()).build();
     }
 
     @GetMapping("/{id}")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200"),
-        @ApiResponse(responseCode = "404", content = @Content(schema = @Schema))
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema))})
     public ResponseEntity<TemplateDto> getById(@PathVariable("id") Long id) {
-        return templateService.findById(id)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+        return templateService.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

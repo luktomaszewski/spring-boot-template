@@ -65,7 +65,8 @@ spotless {
     java {
         importOrder()
         removeUnusedImports()
-        googleJavaFormat()
+        eclipse()
+        indentWithSpaces(4)
     }
 }
 
