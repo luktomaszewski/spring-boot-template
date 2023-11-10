@@ -3,6 +3,7 @@ plugins {
     id "io.spring.dependency-management" version "1.0.10.RELEASE"
     id "java"
     id "jacoco"
+    id 'com.diffplug.spotless' version '6.22.0'
 }
 
 ext {
@@ -58,6 +59,14 @@ processResources {
 
 clean {
     delete "out"
+}
+
+spotless {
+    java {
+        importOrder()
+        removeUnusedImports()
+        googleJavaFormat()
+    }
 }
 
 jacoco {

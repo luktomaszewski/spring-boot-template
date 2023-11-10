@@ -17,13 +17,23 @@ repos:
     rev: v2.12.0
     hooks:
       - id: hadolint
+        name: lint dockerfiles
+        description: lint Dockerfiles
 
   - repo: local
     hooks:
       - id: helm-lint
-        name: helm Lint
-        description: Lint Helm charts
+        name: helm lint
+        description: lint helm chart
         entry: helm lint helm-chart
         language: system
         pass_filenames: false
         always_run: true
+
+  - repo: local
+    hooks:
+      - id: spotless-apply
+        name: apply spotless (java code formatter)
+        entry: ./gradlew spotlessApply
+        language: system
+        types: [java]
