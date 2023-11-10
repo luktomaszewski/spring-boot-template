@@ -27,4 +27,4 @@ node_modules/
 bin/
 
 ### MacOS ###
-.DC_Store
+.DS_Store
