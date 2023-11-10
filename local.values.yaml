@@ -1,10 +1,10 @@
 image:
   repository: spring-boot-template
   pullPolicy: Never
-  tag: "latest"
+  tag: latest
 
 healthCheck:
-  path: "/actuator/health"
+  path: /actuator/health
 
 service:
   port: 4326

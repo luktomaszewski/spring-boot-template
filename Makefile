@@ -36,7 +36,7 @@ destroy: ## remove the app and all containers, images and volumes
 
 .PHONY: helm-install
 helm-install: ## install helm chart (default)
-	helm upgrade -i $(APP_NAME) helm-chart -n $(NAMESPACE) --values local.yaml --create-namespace
+	helm upgrade -i $(APP_NAME) helm-chart -n $(NAMESPACE) --values local.values.yaml --create-namespace
 
 .PHONY: helm-delete
 helm-delete: ## uninstall helm chart
@@ -74,4 +74,4 @@ ecr-images: ## list docker images in ECR repository
 
 .PHONY: helm-install-localstack
 helm-install-localstack: ## install helm chart on EKS in LocalStack
-	helm upgrade -i $(APP_NAME) helm-chart -n $(NAMESPACE) --values localstack.yaml --create-namespace
+	helm upgrade -i $(APP_NAME) helm-chart -n $(NAMESPACE) --values localstack.values.yaml --create-namespace
