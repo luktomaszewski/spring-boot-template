@@ -9,13 +9,9 @@ import lombok.Data;
 public class SearchResult<T> {
 
     private List<T> items;
-
     private Long totalCount;
-
     private Integer page;
-
     private Integer limit;
-
     private Integer pages;
 
 }

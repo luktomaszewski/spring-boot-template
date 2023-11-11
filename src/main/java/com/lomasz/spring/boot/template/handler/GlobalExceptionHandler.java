@@ -23,20 +23,24 @@ public class GlobalExceptionHandler {
         List<ErrorDto> errors = exception.getBindingResult().getFieldErrors().stream()
                 .map(error -> new ErrorDto("Wrong value in the field: " + error.getField(), error.getDefaultMessage()))
                 .collect(Collectors.toList());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errors);
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<List<ErrorDto>> handleBusinessException(BusinessException exception) {
         log.error("Business Exception: " + exception.getMessage(), exception);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonList(new ErrorDto(exception.getMessage())));
     }
 
     @ExceptionHandler(TechnicalException.class)
     public ResponseEntity<List<ErrorDto>> handleTechnicalException(TechnicalException exception) {
         log.error("Technical Exception: " + exception.getMessage(), exception);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Collections.singletonList(new ErrorDto(exception.getMessage())));
     }
 }

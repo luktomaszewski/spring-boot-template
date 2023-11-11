@@ -19,12 +19,17 @@ public class RequestIdFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String requestId = Optional.ofNullable(request.getHeader(X_REQUEST_ID)).orElse(UUID.randomUUID().toString());
 
-        response.addHeader(X_REQUEST_ID, requestId);
+        String requestId = Optional.ofNullable(request.getHeader(X_REQUEST_ID))
+                .orElseGet(UUID.randomUUID()::toString);
 
-        MDC.put(X_REQUEST_ID, requestId);
-        filterChain.doFilter(request, response);
+        try {
+            response.addHeader(X_REQUEST_ID, requestId);
+            MDC.put(X_REQUEST_ID, requestId);
+            filterChain.doFilter(request, response);
+        } finally {
+            MDC.remove(X_REQUEST_ID);
+        }
     }
 
 }

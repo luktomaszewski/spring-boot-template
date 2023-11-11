@@ -32,7 +32,7 @@ public class TemplateService {
         } catch (PropertyReferenceException e) {
             throw new BusinessException("No sort property found: " + e.getPropertyName());
         }
-        List<TemplateDto> items = templateMapper.toDtoList(resultPage.getContent());
+        List<TemplateDto> items = templateMapper.toDtos(resultPage.getContent());
 
         return SearchResult.<TemplateDto>builder().items(items).limit(resultPage.getPageable().getPageSize())
                 .page(resultPage.getPageable().getPageNumber()).pages(resultPage.getTotalPages())
@@ -47,7 +47,8 @@ public class TemplateService {
     }
 
     public Optional<TemplateDto> findById(Long id) {
-        return templateRepository.findById(id).map(templateMapper::toDto);
+        return templateRepository.findById(id)
+                .map(templateMapper::toDto);
     }
 
 }

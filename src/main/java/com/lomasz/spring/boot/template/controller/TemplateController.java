@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -42,17 +43,22 @@ public class TemplateController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> add(@RequestBody @Valid NewTemplateDto newDto) {
         Long id = templateService.create(newDto);
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/templates/{id}")
-                .build().expand(id).toUri()).build();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/api/templates/{id}")
+                .buildAndExpand(id)
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
     @ApiResponses(value = {@ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema))})
     public ResponseEntity<TemplateDto> getById(@PathVariable("id") Long id) {
-        return templateService.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return templateService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

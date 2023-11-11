@@ -74,7 +74,9 @@ class TemplateControllerTest {
                 .perform(post(CREATE_URL).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
-                .andExpect(status().isCreated()).andExpect(header().exists("Location")).andReturn();
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"))
+                .andReturn();
 
         String location = result.getResponse().getHeader("Location");
 
@@ -149,7 +151,8 @@ class TemplateControllerTest {
                 .perform(post(CREATE_URL).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
-                .andExpect(status().isBadRequest()).andReturn();
+                .andExpect(status().isBadRequest())
+                .andReturn();
 
         List<ErrorDto> responseBody = objectMapper.readValue(result.getResponse().getContentAsString(),
                 new TypeReference<List<ErrorDto>>() {
@@ -271,8 +274,12 @@ class TemplateControllerTest {
 
         // when
         MvcResult result = mvc
-                .perform(get(GET_LIST_URL).param("page", "1").param("size", "2").param("order", "DESC")
-                        .param("sort", "budget").contentType(MediaType.APPLICATION_JSON))
+                .perform(get(GET_LIST_URL)
+                        .param("page", "1")
+                        .param("size", "2")
+                        .param("order", "DESC")
+                        .param("sort", "budget")
+                        .contentType(MediaType.APPLICATION_JSON))
                 // then
                 .andExpect(status().isOk()).andReturn();
 

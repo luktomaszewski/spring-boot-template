@@ -168,7 +168,7 @@ class TemplateServiceTest {
         when(templatePage.getContent()).thenReturn(entityList);
 
         when(templateRepository.findAll(any(Pageable.class))).thenReturn(templatePage);
-        when(templateMapper.toDtoList(entityList)).thenReturn(dtoList);
+        when(templateMapper.toDtos(entityList)).thenReturn(dtoList);
 
         // when
         SearchResult<TemplateDto> result = templateService.search(page, limit, sortDirection, sortBy);
@@ -181,7 +181,7 @@ class TemplateServiceTest {
         assertThat(result.getTotalCount()).isEqualTo(totalElements);
 
         verify(templateRepository, times(1)).findAll(any(Pageable.class));
-        verify(templateMapper, times(1)).toDtoList(entityList);
+        verify(templateMapper, times(1)).toDtos(entityList);
     }
 
     @Test
@@ -198,7 +198,7 @@ class TemplateServiceTest {
         // then
         assertThrows(BusinessException.class, () -> templateService.search(page, limit, sortDirection, sortBy));
         verify(templateRepository, times(1)).findAll(any(Pageable.class));
-        verify(templateMapper, never()).toDtoList(anyList());
+        verify(templateMapper, never()).toDtos(anyList());
     }
 
 }

@@ -71,7 +71,12 @@ class TemplateControllerTest {
         templateDto.setName("name");
 
         SearchResult<TemplateDto> searchResult = SearchResult.<TemplateDto>builder()
-                .items(Collections.singletonList(templateDto)).limit(limit).page(page).pages(1).totalCount(1L).build();
+                .items(Collections.singletonList(templateDto))
+                .limit(limit)
+                .page(page)
+                .pages(1)
+                .totalCount(1L)
+                .build();
 
         when(templateService.search(page, limit, sortOrder, sortName)).thenReturn(searchResult);
 
