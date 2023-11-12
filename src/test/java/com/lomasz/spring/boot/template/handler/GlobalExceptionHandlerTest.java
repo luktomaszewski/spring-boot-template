@@ -82,5 +82,4 @@ class GlobalExceptionHandlerTest {
         assertThat(result.getBody().get(0).getMessage()).isEqualTo("Wrong value in the field: " + fieldName);
         assertThat(result.getBody().get(0).getDetails()).isEqualTo(message);
     }
-
 }

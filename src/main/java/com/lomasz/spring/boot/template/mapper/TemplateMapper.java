@@ -17,5 +17,4 @@ public interface TemplateMapper {
     TemplateDto toDto(TemplateEntity entity);
 
     List<TemplateDto> toDtos(List<TemplateEntity> entities);
-
 }

@@ -32,5 +32,4 @@ public class TemplateEntity implements Serializable {
 
     @Column(nullable = false)
     private Long budget;
-
 }

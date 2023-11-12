@@ -20,8 +20,7 @@ public class RequestIdFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String requestId = Optional.ofNullable(request.getHeader(X_REQUEST_ID))
-                .orElseGet(UUID.randomUUID()::toString);
+        String requestId = Optional.ofNullable(request.getHeader(X_REQUEST_ID)).orElseGet(UUID.randomUUID()::toString);
 
         try {
             response.addHeader(X_REQUEST_ID, requestId);
@@ -31,5 +30,4 @@ public class RequestIdFilter extends OncePerRequestFilter {
             MDC.remove(X_REQUEST_ID);
         }
     }
-
 }

@@ -11,5 +11,4 @@ public class OpenApiProperties {
 
     private String name;
     private String version;
-
 }

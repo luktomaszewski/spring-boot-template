@@ -56,7 +56,9 @@ class TemplateControllerTest {
 
     @BeforeEach
     void setUp() {
-        mvc = MockMvcBuilders.webAppContextSetup(context).addFilter(requestIdFilter).build();
+        mvc = MockMvcBuilders.webAppContextSetup(context)
+                .addFilter(requestIdFilter)
+                .build();
     }
 
     @Test
@@ -70,8 +72,8 @@ class TemplateControllerTest {
         NewTemplateDto johnDoe = new NewTemplateDto(name, acronym, budget);
 
         // when
-        MvcResult result = mvc
-                .perform(post(CREATE_URL).contentType(MediaType.APPLICATION_JSON)
+        MvcResult result = mvc.perform(post(CREATE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
                 .andExpect(status().isCreated())
@@ -103,8 +105,9 @@ class TemplateControllerTest {
         NewTemplateDto johnDoe = new NewTemplateDto(templateName, null, templateBudget);
 
         // when
-        mvc.perform(post(CREATE_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(johnDoe)))
+        mvc.perform(post(CREATE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
                 .andExpect(status().isBadRequest());
     }
@@ -120,15 +123,15 @@ class TemplateControllerTest {
         NewTemplateDto johnDoe = new NewTemplateDto(templateName, templateAcronym, templateBudget);
 
         // when
-        MvcResult result = mvc
-                .perform(post(CREATE_URL).contentType(MediaType.APPLICATION_JSON)
+        MvcResult result = mvc.perform(post(CREATE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
-                .andExpect(status().isBadRequest()).andReturn();
+                .andExpect(status().isBadRequest())
+                .andReturn();
 
-        List<ErrorDto> responseBody = objectMapper.readValue(result.getResponse().getContentAsString(),
-                new TypeReference<List<ErrorDto>>() {
-                });
+        List<ErrorDto> responseBody = objectMapper.readValue(
+                result.getResponse().getContentAsString(), new TypeReference<List<ErrorDto>>() {});
 
         assertThat(responseBody).isNotNull();
         assertThat(responseBody).hasSize(1);
@@ -147,16 +150,15 @@ class TemplateControllerTest {
         NewTemplateDto johnDoe = new NewTemplateDto(templateName, templateAcronym, templateBudget);
 
         // when
-        MvcResult result = mvc
-                .perform(post(CREATE_URL).contentType(MediaType.APPLICATION_JSON)
+        MvcResult result = mvc.perform(post(CREATE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
-        List<ErrorDto> responseBody = objectMapper.readValue(result.getResponse().getContentAsString(),
-                new TypeReference<List<ErrorDto>>() {
-                });
+        List<ErrorDto> responseBody = objectMapper.readValue(
+                result.getResponse().getContentAsString(), new TypeReference<List<ErrorDto>>() {});
 
         assertThat(responseBody).isNotNull();
         assertThat(responseBody).hasSize(1);
@@ -183,7 +185,8 @@ class TemplateControllerTest {
         // when
         MvcResult result = mvc.perform(get(GET_BY_ID_URL, id).contentType(MediaType.APPLICATION_JSON))
                 // then
-                .andExpect(status().isOk()).andReturn();
+                .andExpect(status().isOk())
+                .andReturn();
 
         TemplateDto responseBody = objectMapper.readValue(result.getResponse().getContentAsString(), TemplateDto.class);
 
@@ -219,7 +222,7 @@ class TemplateControllerTest {
         janKowalski.setBudget(3000000L);
 
         TemplateEntity juanitoPerez = new TemplateEntity();
-        juanitoPerez.setName("Juantio Pérez");
+        juanitoPerez.setName("Juantio Perez");
         juanitoPerez.setAcronym("JP");
         juanitoPerez.setBudget(2000000L);
 
@@ -230,11 +233,11 @@ class TemplateControllerTest {
         // when
         MvcResult result = mvc.perform(get(GET_LIST_URL).contentType(MediaType.APPLICATION_JSON))
                 // then
-                .andExpect(status().isOk()).andReturn();
+                .andExpect(status().isOk())
+                .andReturn();
 
-        SearchResult<TemplateDto> searchResult = objectMapper.readValue(result.getResponse().getContentAsString(),
-                new TypeReference<SearchResult<TemplateDto>>() {
-                });
+        SearchResult<TemplateDto> searchResult = objectMapper.readValue(
+                result.getResponse().getContentAsString(), new TypeReference<SearchResult<TemplateDto>>() {});
 
         assertThat(searchResult.getTotalCount()).isEqualTo(3);
         assertThat(searchResult.getPage()).isEqualTo(0);
@@ -258,7 +261,7 @@ class TemplateControllerTest {
         janKowalski.setBudget(3000000L);
 
         TemplateEntity juanitoPerez = new TemplateEntity();
-        juanitoPerez.setName("Juantio Pérez");
+        juanitoPerez.setName("Juantio Perez");
         juanitoPerez.setAcronym("JP");
         juanitoPerez.setBudget(2000000L);
 
@@ -273,26 +276,26 @@ class TemplateControllerTest {
         templateRepository.save(pierreEtPaul);
 
         // when
-        MvcResult result = mvc
-                .perform(get(GET_LIST_URL)
+        MvcResult result = mvc.perform(get(GET_LIST_URL)
                         .param("page", "1")
                         .param("size", "2")
                         .param("order", "DESC")
                         .param("sort", "budget")
                         .contentType(MediaType.APPLICATION_JSON))
                 // then
-                .andExpect(status().isOk()).andReturn();
+                .andExpect(status().isOk())
+                .andReturn();
 
-        SearchResult<TemplateDto> searchResult = objectMapper.readValue(result.getResponse().getContentAsString(),
-                new TypeReference<SearchResult<TemplateDto>>() {
-                });
+        SearchResult<TemplateDto> searchResult = objectMapper.readValue(
+                result.getResponse().getContentAsString(), new TypeReference<SearchResult<TemplateDto>>() {});
 
         assertThat(searchResult.getTotalCount()).isEqualTo(4);
         assertThat(searchResult.getPage()).isEqualTo(1);
         assertThat(searchResult.getLimit()).isEqualTo(2);
         assertThat(searchResult.getPages()).isEqualTo(2);
         assertThat(searchResult.getItems())
-                .isSortedAccordingTo(Comparator.comparingLong(TemplateDto::getBudget).reversed());
+                .isSortedAccordingTo(
+                        Comparator.comparingLong(TemplateDto::getBudget).reversed());
     }
 
     @Test
@@ -303,7 +306,6 @@ class TemplateControllerTest {
         mvc.perform(get(GET_LIST_URL).param("sort", "surname").contentType(MediaType.APPLICATION_JSON))
                 // then
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -326,5 +328,4 @@ class TemplateControllerTest {
                 // then
                 .andExpect(header().exists("X-Request-ID"));
     }
-
 }

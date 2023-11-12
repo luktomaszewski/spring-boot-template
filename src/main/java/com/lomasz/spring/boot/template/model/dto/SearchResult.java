@@ -13,5 +13,4 @@ public class SearchResult<T> {
     private Integer page;
     private Integer limit;
     private Integer pages;
-
 }

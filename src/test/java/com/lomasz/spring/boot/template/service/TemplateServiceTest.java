@@ -200,5 +200,4 @@ class TemplateServiceTest {
         verify(templateRepository, times(1)).findAll(any(Pageable.class));
         verify(templateMapper, never()).toDtos(anyList());
     }
-
 }

@@ -9,5 +9,4 @@ public class TemplateDto {
     private String name;
     private String acronym;
     private Long budget;
-
 }

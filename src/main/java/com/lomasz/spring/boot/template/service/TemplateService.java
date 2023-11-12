@@ -34,9 +34,13 @@ public class TemplateService {
         }
         List<TemplateDto> items = templateMapper.toDtos(resultPage.getContent());
 
-        return SearchResult.<TemplateDto>builder().items(items).limit(resultPage.getPageable().getPageSize())
-                .page(resultPage.getPageable().getPageNumber()).pages(resultPage.getTotalPages())
-                .totalCount(resultPage.getTotalElements()).build();
+        return SearchResult.<TemplateDto>builder()
+                .items(items)
+                .limit(resultPage.getPageable().getPageSize())
+                .page(resultPage.getPageable().getPageNumber())
+                .pages(resultPage.getTotalPages())
+                .totalCount(resultPage.getTotalElements())
+                .build();
     }
 
     public Long create(NewTemplateDto newDto) {
@@ -47,8 +51,6 @@ public class TemplateService {
     }
 
     public Optional<TemplateDto> findById(Long id) {
-        return templateRepository.findById(id)
-                .map(templateMapper::toDto);
+        return templateRepository.findById(id).map(templateMapper::toDto);
     }
-
 }
