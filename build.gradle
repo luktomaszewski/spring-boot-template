@@ -79,17 +79,13 @@ jacocoTestReport {
     executionData(fileTree(project.buildDir).include("jacoco/*.exec"))
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(
-                    dir: it,
-                    exclude: [
-                            "**/*Application*",
-                            "**/config/**/*",
-                            "**/exception/**/*",
-                            "**/model/**/*",
-                            "**/mapper/**/*",
-                            "**/repository/**/*"
-                    ]
-            )
+            fileTree(dir: it,
+                    exclude: ["**/*Application*",
+                              "**/config/**/*",
+                              "**/exception/**/*",
+                              "**/model/**/*",
+                              "**/mapper/**/*",
+                              "**/repository/**/*"])
         }))
     }
 }
