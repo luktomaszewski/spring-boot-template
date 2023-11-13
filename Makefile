@@ -4,6 +4,7 @@ BUILDER_SERVICE_NAME=builder
 NAMESPACE=spring-boot-template
 APP_NAME=spring-boot-template
 APP_PORT=4326
+HELM_CHART=helm-chart
 
 help:
 	@grep -E '^[1-9a-zA-Z_-]+:.*?## .*$$|(^#--)' $(MAKEFILE_LIST) \
@@ -33,18 +34,17 @@ destroy: ## remove the app and all containers, images and volumes
 	docker-compose down -v --rmi all
 
 #-- helm/k8s:
+.PHONY: helm-lint
+helm-lint: ## lint helm chart
+	helm lint $(HELM_CHART)
 
 .PHONY: helm-install
 helm-install: ## install helm chart (default)
-	helm upgrade -i $(APP_NAME) helm-chart -n $(NAMESPACE) --values local.values.yaml --create-namespace
+	helm upgrade -i $(APP_NAME) $(HELM_CHART) -n $(NAMESPACE) --values local.values.yaml --create-namespace
 
 .PHONY: helm-delete
 helm-delete: ## uninstall helm chart
 	helm delete $(APP_NAME) -n $(APP_NAME)
-
-.PHONY: helm-lint
-helm-lint: ## lint helm chart
-	helm lint helm-chart
 
 .PHONY: debug-pod
 debug-pod: ## debug pod
@@ -74,4 +74,4 @@ ecr-images: ## list docker images in ECR repository
 
 .PHONY: helm-install-localstack
 helm-install-localstack: ## install helm chart on EKS in LocalStack
-	helm upgrade -i $(APP_NAME) helm-chart -n $(NAMESPACE) --values localstack.values.yaml --create-namespace
+	helm upgrade -i $(APP_NAME) $(HELM_CHART) -n $(NAMESPACE) --values localstack.values.yaml --create-namespace
