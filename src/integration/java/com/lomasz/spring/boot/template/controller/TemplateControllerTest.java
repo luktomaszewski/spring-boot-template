@@ -224,7 +224,7 @@ class TemplateControllerTest {
         janKowalski.setBudget(3000000L);
 
         TemplateEntity juanitoPerez = new TemplateEntity();
-        juanitoPerez.setName("Juantio Perez");
+        juanitoPerez.setName("Juanito Perez");
         juanitoPerez.setAcronym("JP");
         juanitoPerez.setBudget(2000000L);
 
@@ -264,7 +264,7 @@ class TemplateControllerTest {
         janKowalski.setBudget(3000000L);
 
         TemplateEntity juanitoPerez = new TemplateEntity();
-        juanitoPerez.setName("Juantio Perez");
+        juanitoPerez.setName("Juanito Perez");
         juanitoPerez.setAcronym("JP");
         juanitoPerez.setBudget(2000000L);
 

@@ -51,6 +51,7 @@ public class TemplateService {
     }
 
     public Optional<TemplateDto> findById(Long id) {
-        return templateRepository.findById(id).map(templateMapper::toDto);
+        return templateRepository.findById(id)
+                .map(templateMapper::toDto);
     }
 }

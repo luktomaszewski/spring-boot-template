@@ -5,7 +5,6 @@ import com.lomasz.spring.boot.template.exception.TechnicalException;
 import com.lomasz.spring.boot.template.model.dto.ErrorDto;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,7 +20,7 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException exception) {
         List<ErrorDto> errors = exception.getBindingResult().getFieldErrors().stream()
                 .map(error -> new ErrorDto("Wrong value in the field: " + error.getField(), error.getDefaultMessage()))
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.badRequest()
                 .body(errors);
     }
