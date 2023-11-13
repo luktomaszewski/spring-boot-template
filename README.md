@@ -1,24 +1,24 @@
 # Spring Boot Template
 
 ![CI Status](https://github.com/lomasz/spring-boot-template/workflows/CI/badge.svg)
-![CodeQL Status](https://github.com/lomasz/spring-boot-template/workflows/CodeQL/badge.svg)
 
-* Spring Boot + Web + JPA + REST
-* Gradle Wrapper
-* Lombok
+* spring boot + web + jpa + rest
+* gradle wrapper
+* lombok
 * MapStruct
-* Swagger
-* H2 (embedded database)
-* JUnit 5
-* JaCoCo Java Code Coverage
-* k8s/Helm
+* mapstruct
+* h2 (embedded)
+* junit 5
+* jacoco
+* k8s/helm
+* make
 
 ## :memo: Prerequisites
 
 * `make`
+* `pre-commit`
 * `docker` + `kubectl`
 * `helm`
-* `pre-commit`
 * `hadolint`
 * `jq`
 * `awslocal`
