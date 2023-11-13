@@ -65,10 +65,10 @@ make
 
 ### Helm
 
-- [ ] [`values.yaml`](values.yaml)
+- [ ] [`local.values.yaml`](local.values.yaml)
   * change `image.repository` value
   * change `service.port` value
-- [ ] [`localstack.yaml`](localstack.yaml)
+- [ ] [`localstack.values.yaml`](localstack.values.yaml)
   * change `image.repository` value
   * change `service.port` value
 
