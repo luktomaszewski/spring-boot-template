@@ -63,7 +63,7 @@ class TemplateControllerTest {
 
     @Test
     @Transactional
-    void add() throws Exception {
+    public void add() throws Exception {
         // given
         String name = "John Doe";
         String acronym = "JD";
@@ -97,7 +97,7 @@ class TemplateControllerTest {
 
     @Test
     @Transactional
-    void addWhenNewTemplateDtoWithMissingValueShouldReturnHttpStatusBadRequest() throws Exception {
+    public void addWhenNewTemplateDtoWithMissingValueShouldReturnHttpStatusBadRequest() throws Exception {
         // given
         String templateName = "John Doe";
         Long templateBudget = 182005000L;
@@ -114,7 +114,7 @@ class TemplateControllerTest {
 
     @Test
     @Transactional
-    void addWhenNewTemplateDtoWithNegativeBudgetValueShouldReturnHttpStatusBadRequest() throws Exception {
+    public void addWhenNewTemplateDtoWithNegativeBudgetValueShouldReturnHttpStatusBadRequest() throws Exception {
         // given
         String templateName = "John Doe";
         String templateAcronym = "JD";
@@ -131,7 +131,8 @@ class TemplateControllerTest {
                 .andReturn();
 
         List<ErrorDto> responseBody = objectMapper.readValue(
-                result.getResponse().getContentAsString(), new TypeReference<List<ErrorDto>>() {});
+                result.getResponse().getContentAsString(), new TypeReference<>() {
+                });
 
         assertThat(responseBody).isNotNull();
         assertThat(responseBody).hasSize(1);
@@ -141,7 +142,7 @@ class TemplateControllerTest {
 
     @Test
     @Transactional
-    void addWhenNewTemplateDtoWithTooLongAcronymValueShouldReturnHttpStatusBadRequest() throws Exception {
+    public void addWhenNewTemplateDtoWithTooLongAcronymValueShouldReturnHttpStatusBadRequest() throws Exception {
         // given
         String templateName = "John Doe";
         String templateAcronym = "JOHN DOE";
@@ -158,7 +159,8 @@ class TemplateControllerTest {
                 .andReturn();
 
         List<ErrorDto> responseBody = objectMapper.readValue(
-                result.getResponse().getContentAsString(), new TypeReference<List<ErrorDto>>() {});
+                result.getResponse().getContentAsString(), new TypeReference<>() {
+                });
 
         assertThat(responseBody).isNotNull();
         assertThat(responseBody).hasSize(1);
@@ -168,7 +170,7 @@ class TemplateControllerTest {
 
     @Test
     @Transactional
-    void getByIdWhenExistsShouldReturnTemplateDtoAndHttpStatusOk() throws Exception {
+    public void getByIdWhenExistsShouldReturnTemplateDtoAndHttpStatusOk() throws Exception {
         // given
         String templateName = "John Doe";
         String templateAcronym = "JD";
@@ -209,7 +211,7 @@ class TemplateControllerTest {
 
     @Test
     @Transactional
-    void searchWithDefaultInputShouldReturnUnsortedItems() throws Exception {
+    public void searchWithDefaultInputShouldReturnUnsortedItems() throws Exception {
         // given
         TemplateEntity johnDoe = new TemplateEntity();
         johnDoe.setName("John Doe");
@@ -237,7 +239,8 @@ class TemplateControllerTest {
                 .andReturn();
 
         SearchResult<TemplateDto> searchResult = objectMapper.readValue(
-                result.getResponse().getContentAsString(), new TypeReference<SearchResult<TemplateDto>>() {});
+                result.getResponse().getContentAsString(), new TypeReference<>() {
+                });
 
         assertThat(searchResult.getTotalCount()).isEqualTo(3);
         assertThat(searchResult.getPage()).isEqualTo(0);
@@ -248,7 +251,7 @@ class TemplateControllerTest {
 
     @Test
     @Transactional
-    void searchWithCustomInputShouldReturnItemsSortedByBudgetAsc() throws Exception {
+    public void searchWithCustomInputShouldReturnItemsSortedByBudgetAsc() throws Exception {
         // given
         TemplateEntity johnDoe = new TemplateEntity();
         johnDoe.setName("John Doe");
@@ -287,7 +290,8 @@ class TemplateControllerTest {
                 .andReturn();
 
         SearchResult<TemplateDto> searchResult = objectMapper.readValue(
-                result.getResponse().getContentAsString(), new TypeReference<SearchResult<TemplateDto>>() {});
+                result.getResponse().getContentAsString(), new TypeReference<>() {
+                });
 
         assertThat(searchResult.getTotalCount()).isEqualTo(4);
         assertThat(searchResult.getPage()).isEqualTo(1);
