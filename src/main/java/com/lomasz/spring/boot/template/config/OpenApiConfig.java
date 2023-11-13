@@ -20,6 +20,6 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title(properties.getName())
                         .version(properties.getVersion())
-                        .description("Spring Boot Template REST API"));
+                );
     }
 }
