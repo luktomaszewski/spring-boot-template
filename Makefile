@@ -22,7 +22,7 @@ down: ## stop the app, any running contains, and networking
 
 .PHONY: debug
 debug: ## debug the service container with app by running docker and shelling into it
-	docker exec -it $(APP_SERVICE_NAME) //bin/bash
+	docker-compose exec -it $(APP_SERVICE_NAME) //bin/bash
 
 .PHONY: build
 build: ## build docker image
