@@ -14,6 +14,7 @@ ext {
     mapStructVersion = "1.5.2.Final"
     mockitoVersion = "4.8.0"
     swaggerVersion = "1.6.11"
+    h2Version = "h2:2.2.224"
 }
 
 group = "com.lomasz.spring.boot.template"
@@ -44,7 +45,7 @@ dependencies {
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
-    testImplementation "com.h2database:h2:$junitVersion"
+    testImplementation "com.h2database:h2:$h2Version"
 
     testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
