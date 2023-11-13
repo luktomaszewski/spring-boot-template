@@ -78,6 +78,9 @@ jacoco {
 }
 
 jacocoTestReport {
+    reports {
+        xml.required = true
+    }
     executionData(fileTree(layout.buildDirectory.get().asFile).include("jacoco/*.exec"))
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
