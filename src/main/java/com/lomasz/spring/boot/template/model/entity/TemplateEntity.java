@@ -1,13 +1,8 @@
 package com.lomasz.spring.boot.template.model.entity;
 
+import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import lombok.Data;
 
 @Data

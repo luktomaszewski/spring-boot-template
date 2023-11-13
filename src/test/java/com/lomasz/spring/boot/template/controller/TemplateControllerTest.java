@@ -1,18 +1,16 @@
 package com.lomasz.spring.boot.template.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.lomasz.spring.boot.template.model.dto.NewTemplateDto;
 import com.lomasz.spring.boot.template.model.dto.SearchResult;
 import com.lomasz.spring.boot.template.model.dto.TemplateDto;
 import com.lomasz.spring.boot.template.service.TemplateService;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

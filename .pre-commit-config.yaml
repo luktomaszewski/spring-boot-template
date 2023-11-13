@@ -30,8 +30,8 @@ repos:
         pass_filenames: false
         always_run: true
 
-#      - id: spotless-apply
-#        name: apply spotless (java code formatter)
-#        entry: ./gradlew spotlessApply
-#        language: system
-#        pass_filenames: false
+      - id: spotless-apply
+        name: apply spotless (java code formatter)
+        entry: ./gradlew spotlessApply
+        language: system
+        pass_filenames: false
