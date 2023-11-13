@@ -1,19 +1,19 @@
 plugins {
+    id "java"
     id "org.springframework.boot" version "2.7.3"
     id "io.spring.dependency-management" version "1.0.10.RELEASE"
-    id "java"
     id "jacoco"
-    id 'com.diffplug.spotless' version '6.22.0'
+    id "com.diffplug.spotless" version "6.22.0"
     id "com.coditory.integration-test" version "1.4.5"
 }
 
 ext {
     jacocoVersion = "0.8.8"
-    junitVersion = '5.9.0'
-    lombokVersion = '1.18.24'
-    mapStructVersion = '1.5.2.Final'
-    mockitoVersion = '4.8.0'
-    swaggerVersion = '1.6.11'
+    junitVersion = "5.9.0"
+    lombokVersion = "1.18.24"
+    mapStructVersion = "1.5.2.Final"
+    mockitoVersion = "4.8.0"
+    swaggerVersion = "1.6.11"
 }
 
 group = "com.lomasz.spring.boot.template"
@@ -31,7 +31,8 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-data-rest"
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
@@ -41,11 +42,9 @@ dependencies {
 
     implementation "org.springdoc:springdoc-openapi-ui:$swaggerVersion"
 
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
-
-    testImplementation "com.h2database:h2:2.2.224"
-
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+    testImplementation "com.h2database:h2:$junitVersion"
 
     testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
