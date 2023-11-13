@@ -43,7 +43,7 @@ dependencies {
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
 
-    runtimeOnly 'com.h2database:h2:2.1.214'
+    testImplementation "com.h2database:h2:2.2.224"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
