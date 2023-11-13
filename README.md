@@ -50,8 +50,6 @@ make
   * change `rootProject.name` value
 - [ ] [`build.gradle`](build.gradle):
   * change `group` value
-- [ ] [`OpenApiConfig.java`](src/main/java/com/lomasz/spring/boot/template/config/OpenApiConfig.java):
-  * change description in `openApi()`
 - [ ] [`src/main`](src/main):
   * rename main package value
 - [ ] [`application.properties`](src/main/resources/application.properties):
