@@ -5,7 +5,6 @@
 * spring boot + web + jpa + rest
 * gradle wrapper
 * lombok
-* MapStruct
 * mapstruct
 * h2 (embedded)
 * junit 5
@@ -44,35 +43,7 @@ make
 
 ## How to reuse template
 
-### Spring Boot
-
-- [ ] [`settings.gradle`](settings.gradle):
-  * change `rootProject.name` value
-- [ ] [`build.gradle`](build.gradle):
-  * change `group` value
-- [ ] [`src/main`](src/main):
-  * rename main package value
-- [ ] [`application.properties`](src/main/resources/application.properties):
-  * change `server.port` value
-
-### Docker
-
-- [ ] [`docker-compose.yml`](docker-compose.yml):
-  * change image name
-  * change port mapping
-
-### Helm
-
-- [ ] [`local.values.yaml`](local.values.yaml)
-  * change `image.repository` value
-  * change `service.port` value
-- [ ] [`localstack.values.yaml`](localstack.values.yaml)
-  * change `image.repository` value
-  * change `service.port` value
-
-### Make
-
-- [ ] [`Makefile`](Makefile)
-  * change `NAMESPACE` value
-  * change `APP_NAME` value
-  * change `APP_PORT` value
+```bash
+# Usage: ./generate.sh [--name app_name] [--port new_port] [--package new_package]
+./generate.sh
+```
