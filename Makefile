@@ -1,9 +1,10 @@
 APP_SERVICE_NAME=app
 BUILDER_SERVICE_NAME=builder
 
-NAMESPACE=spring-boot-template
 APP_NAME=spring-boot-template
 APP_PORT=4326
+
+NAMESPACE=spring-boot-template
 HELM_CHART=helm-chart
 
 help:

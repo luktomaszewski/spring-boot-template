@@ -16,6 +16,7 @@ builder.Dockerfile
 Dockerfile
 docker-compose.yml
 
+generate.sh
 Makefile
 *.log
 *.md
