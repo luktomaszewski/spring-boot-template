@@ -12,6 +12,4 @@ RUN ./gradlew --version
 COPY . .
 
 # build app
-RUN ./gradlew --build-cache bootJar
-
-CMD ["/bin/bash"]
+RUN ./gradlew bootJar
