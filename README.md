@@ -47,3 +47,9 @@ make
 # Usage: ./generate.sh [--name app_name] [--port new_port] [--package new_package]
 ./generate.sh
 ```
+
+Use the name of the current directory as the app name:
+
+```bash
+./generate.sh --name "$(basename "$(pwd)")"
+```
