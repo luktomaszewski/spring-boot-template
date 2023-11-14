@@ -17,7 +17,7 @@ ext {
     h2Version = "2.2.224"
 }
 
-group = "com.lomasz.spring.boot.template"
+group = "com.github.lomasz.spring.boot.template"
 version = "0.0.1-SNAPSHOT"
 
 java {

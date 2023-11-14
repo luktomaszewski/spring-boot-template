@@ -12,7 +12,7 @@ ALL_TASKS_SUCCESSFUL=true
 # Default values
 default_app_name="spring-boot-template"
 default_app_port="4326"
-default_package="com.lomasz.spring.boot.template"
+default_package="com.github.lomasz.spring.boot.template"
 
 new_name=""
 new_port=""
