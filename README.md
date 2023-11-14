@@ -30,17 +30,6 @@ To see a list of available commands, run command:
 make
 ```
 
-## Actuator
-
-* [`http://localhost:4326/actuator/health`](http://localhost:4326/actuator/health) - health information (status)
-* [`http://localhost:4326/actuator/info`](http://localhost:4326/actuator/info) - application basic information
-
-## API Documentation
-
-* [`http://localhost:4326/v3/api-docs`](http://localhost:4326/v3/api-docs) - API Docs [JSON]
-* [`http://localhost:4326/v3/api-docs.yaml`](http://localhost:4326/v3/api-docs.yaml) - API Docs [YAML]
-* [`http://localhost:4326/swagger-ui.html`](http://localhost:4326/swagger-ui.html) - Swagger UI
-
 ## How to reuse template
 
 ```bash
@@ -53,3 +42,14 @@ Use the name of the current directory as the app name:
 ```bash
 ./generate.sh --name "$(basename "$(pwd)")"
 ```
+
+## Actuator
+
+* [`http://localhost:4326/actuator/health`](http://localhost:4326/actuator/health) - health information (status)
+* [`http://localhost:4326/actuator/info`](http://localhost:4326/actuator/info) - application basic information
+
+## API Documentation
+
+* [`http://localhost:4326/v3/api-docs`](http://localhost:4326/v3/api-docs) - API Docs [JSON]
+* [`http://localhost:4326/v3/api-docs.yaml`](http://localhost:4326/v3/api-docs.yaml) - API Docs [YAML]
+* [`http://localhost:4326/swagger-ui.html`](http://localhost:4326/swagger-ui.html) - Swagger UI
