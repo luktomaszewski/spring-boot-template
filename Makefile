@@ -27,8 +27,8 @@ debug: ## debug the service container with app by running docker and shelling in
 
 .PHONY: build
 build: ## build docker image
-	docker-compose build $(BUILDER_SERVICE_NAME)
-	docker-compose build $(APP_SERVICE_NAME)
+	docker-compose build --no-cache $(BUILDER_SERVICE_NAME)
+	docker-compose build --no-cache $(APP_SERVICE_NAME)
 
 .PHONY: destroy
 destroy: ## remove the app and all containers, images and volumes

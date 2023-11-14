@@ -9,7 +9,6 @@ services:
       context: .
       dockerfile: builder.Dockerfile
     volumes:
-      - output-volume:/app
       - build-cache:/root/.gradle/caches/
 
   app:
@@ -23,5 +22,4 @@ services:
 
 volumes:
   build-cache:
-  output-volume:
-    name: ${OUTPUT_VOLUME_NAME:-spring-boot-template_default-output-volume}
+    name: build-cache
