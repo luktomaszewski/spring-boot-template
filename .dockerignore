@@ -4,8 +4,7 @@
 
 .idea
 
-build/**
-!build/libs/
+build/
 
 .gradle
 
