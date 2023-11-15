@@ -9,10 +9,10 @@ TADA="\xF0\x9F\x8E\x89"    # Tada emoji
 
 ALL_TASKS_SUCCESSFUL=true
 
-# Default values
-default_app_name="spring-boot-template"
-default_app_port="4326"
-default_package="com.github.lomasz.spring.boot.template"
+# Current values
+current_app_name="spring-boot-template"
+current_app_port="4326"
+current_package="com.github.lomasz.spring.boot.template"
 
 new_name=""
 new_port=""
@@ -20,14 +20,25 @@ new_package=""
 
 # Function to display usage
 usage() {
-    echo "Usage: $0 [--name app_name] [--port new_port] [--package new_package]"
+    if [ -t 1 ]; then
+        printf "Usage: %s [OPTIONS]\n" "$(basename "$0")"
+        printf "\nScript for updating application name, port and package in a Spring Boot project.\n"
+        printf "\nOptions:\n"
+        printf "  --name app_name\tnew app name, this option cannot be used together with --auto-name\n"
+        printf "  --port new_port\tnew port number\n"
+        printf "  --package new_package\tnew package name\n"
+        printf "  --auto-name\t\tset app name to the current directory name, this option cannot be used together with --name\n"
+        printf "\nExamples:\n"
+        printf "  %s --name bug-hunter --port 8080 --package com.null.pointer\n" "$(basename "$0")"
+        printf "  %s --auto-name\t\t# Automatically uses the name of the current directory\n\n" "$(basename "$0")"
+    fi
     exit 1
 }
 
 # Function to update folder structure
 update_folder_structure() {
     local base_path=$1
-    local old_package_path="$base_path/$(echo $default_package | tr '.' '/')"
+    local old_package_path="$base_path/$(echo $current_package | tr '.' '/')"
     local new_package_path="$base_path/$(echo $new_package | tr '.' '/')"
 
     # Create new package directory structure if it does not exist
@@ -75,11 +86,19 @@ log_step() {
     return $status
 }
 
+# Flag to check if any argument is provided
+any_argument_provided=false
+
 # Process arguments
+auto_name=false
+name_provided=false
+
 while [ "$1" != "" ]; do
+    any_argument_provided=true
     case $1 in
         --name )    shift
                     new_name=$1
+                    name_provided=true
                     ;;
         --port )    shift
                     new_port=$1
@@ -87,41 +106,61 @@ while [ "$1" != "" ]; do
         --package ) shift
                     new_package=$1
                     ;;
+        --auto-name) auto_name=true
+                    ;;
         * )         usage
                     exit 1
     esac
     shift
 done
 
-# Ask for missing information
-if [ -z "$new_name" ]; then
-    read -p "Enter new application name (default: $default_app_name): " new_name
-    new_name=${new_name:-$default_app_name}
-fi
-if [ -z "$new_port" ]; then
-    read -p "Enter new application port (default: $default_app_port): " new_port
-    new_port=${new_port:-$default_app_port}
-fi
-if [ -z "$new_package" ]; then
-    read -p "Enter new package name (default: $default_package): " new_package
-    new_package=${new_package:-$default_package}
+# Check if both --name and --auto-name are provided
+if [ "$auto_name" = true ] && [ "$name_provided" = true ]; then
+    echo "Error: --name and --auto-name cannot be used together."
+    exit 1
 fi
 
-echo "--------------------------------------------------------------------------------"
+# Set name to current directory name if --auto-name is used
+if [ "$auto_name" = true ]; then
+    new_name=$(basename "$(pwd)")
+fi
+
+# Ask for missing information only if no arguments were provided
+if [ "$any_argument_provided" = false ]; then
+    if [ -z "$new_name" ]; then
+        read -p "Enter new application name (current: $current_app_name): " new_name
+        new_name=${new_name:-$current_app_name}
+    fi
+    if [ -z "$new_port" ]; then
+        read -p "Enter new application port (current: $current_app_port): " new_port
+        new_port=${new_port:-$current_app_port}
+    fi
+    if [ -z "$new_package" ]; then
+        read -p "Enter new package name (current: $current_package): " new_package
+        new_package=${new_package:-$current_package}
+    fi
+else
+    # Use default values if no value is provided
+    new_name=${new_name:-$current_app_name}
+    new_port=${new_port:-$current_app_port}
+    new_package=${new_package:-$current_package}
+fi
+
+printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 
 # Update application name
-log_step "Updating application name" find_and_replace "$default_app_name" "$new_name" '*/\.*'
+log_step "Updating application name" find_and_replace "$current_app_name" "$new_name" '*/\.*'
 
 # Update application port
-log_step "Updating application port" find_and_replace "$default_app_port" "$new_port" '*/\.*'
+log_step "Updating application port" find_and_replace "$current_app_port" "$new_port" '*/\.*'
 
 # Update package
-log_step "Updating package" find_and_replace "$default_package" "$new_package" '*/\.*'
+log_step "Updating package" find_and_replace "$current_package" "$new_package" '*/\.*'
 
 # Update package name in build.gradle
-log_step "Updating package name in build.gradle" sed -i '' "s/group = '$default_package'/group = '$new_package'/g" build.gradle
+log_step "Updating package name in build.gradle" sed -i '' "s/group = '$current_package'/group = '$new_package'/g" build.gradle
 
-old_package_path="src/main/java/$(echo $default_package | tr '.' '/')"
+old_package_path="src/main/java/$(echo $current_package | tr '.' '/')"
 new_package_path="src/main/java/$(echo $new_package | tr '.' '/')"
 
 log_step "Updating folder structure for main" update_folder_structure "src/main/java"
