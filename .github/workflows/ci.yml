@@ -35,7 +35,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
-      - name: OWASP dependency check
+      - name: OWASP dependency-check
         run: ./gradlew dependencyCheckAnalyze
 
   docker:
