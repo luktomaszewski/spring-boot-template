@@ -28,7 +28,7 @@ build: ## build gradle project
 owasp-check: ## OWASP dependency check
 	docker-compose run --rm $(BUILDER_SERVICE_NAME) ./gradlew dependencyCheckAnalyze
 
-#-- docker/docker-compose:
+#-- docker:
 .PHONY: build-image
 build-image: ## build docker image
 	docker-compose build $(BUILDER_SERVICE_NAME)
@@ -57,7 +57,17 @@ scan: build-image ## performs a vulnerability scan on a docker image
 destroy: ## remove the app and all containers, images and volumes
 	docker-compose down -v --rmi all
 
-#-- helm/k8s:
+#-- k8s:
+.PHONY: debug-pod
+debug-pod: ## debug a specific pod or the first pod in the namespace, usage: `make debug-pod POD_NAME=<pod_name> (optional)`
+	$(eval POD_NAME ?= $(shell kubectl get pods -n $(NAMESPACE) -o json | jq -r '.items[0].metadata.name'))
+	kubectl exec --stdin --tty -n $(NAMESPACE) ${POD_NAME} -- /bin/bash
+
+.PHONY: port-forward
+port-forward: ## make port forward to k8s service
+	kubectl port-forward -n $(NAMESPACE) svc/$(APP_NAME) $(APP_PORT):$(APP_PORT)
+
+#-- helm:
 .PHONY: helm-lint
 helm-lint: ## lint helm chart
 	helm lint $(HELM_CHART)
@@ -66,21 +76,15 @@ helm-lint: ## lint helm chart
 helm-install: ## install helm chart (default)
 	helm upgrade -i $(APP_NAME) $(HELM_CHART) -n $(NAMESPACE) --values local.values.yaml --create-namespace
 
+.PHONY: helm-install-localstack
+helm-install-localstack: ## install helm chart on EKS in LocalStack
+	helm upgrade -i $(APP_NAME) $(HELM_CHART) -n $(NAMESPACE) --values localstack.values.yaml --create-namespace
+
 .PHONY: helm-delete
 helm-delete: ## uninstall helm chart
 	helm delete $(APP_NAME) -n $(APP_NAME)
 
-.PHONY: debug-pod
-debug-pod: ## debug pod
-	POD_NAME=$(kubectl get pods -n $(APP_NAME) -o json | jq -r '.items[].metadata.name')
-	kubectl exec --stdin --tty -n $(NAMESPACE) ${POD_NAME} -- /bin/bash
-
-.PHONY: port-forward
-port-forward: ## make port forward to k8s service
-	kubectl port-forward -n $(NAMESPACE) svc/$(APP_NAME) $(APP_PORT):$(APP_PORT)
-
 #-- localstack:
-
 .PHONY: ecr-login
 ecr-login: ## login to ECR
 	awslocal ecr get-login-password | docker login --username AWS --password-stdin $(AWS_ECR_URI)
@@ -93,7 +97,3 @@ ecr-publish: build-image ecr-login ## publish docker image to ECR
 .PHONY: ecr-images
 ecr-images: ## list docker images in ECR repository
 	awslocal ecr describe-images --repository-name $(APP_NAME)
-
-.PHONY: helm-install-localstack
-helm-install-localstack: ## install helm chart on EKS in LocalStack
-	helm upgrade -i $(APP_NAME) $(HELM_CHART) -n $(NAMESPACE) --values localstack.values.yaml --create-namespace
