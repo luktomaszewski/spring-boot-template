@@ -69,7 +69,6 @@ started with your custom application more quickly.
 ## Actuator
 
 * [`http://localhost:4326/actuator/health`](http://localhost:4326/actuator/health) - health information (status)
-* [`http://localhost:4326/actuator/info`](http://localhost:4326/actuator/info) - application basic information
 
 ## API Documentation
 
