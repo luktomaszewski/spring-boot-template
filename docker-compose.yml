@@ -7,7 +7,7 @@ services:
     container_name: spring-boot-template-builder
     build:
       context: .
-      dockerfile: builder.Dockerfile
+      dockerfile: build.Dockerfile
     volumes:
       - build-cache:/root/.gradle/caches/
 

@@ -11,7 +11,7 @@ build/
 helm-chart/
 *.values.yaml
 
-builder.Dockerfile
+build.Dockerfile
 Dockerfile
 docker-compose.yml
 
