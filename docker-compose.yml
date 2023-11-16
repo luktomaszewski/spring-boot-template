@@ -23,6 +23,8 @@ services:
   trivy:
     image: aquasec/trivy:latest
     container_name: trivy
+    volumes:
+      - .:/results
 
 volumes:
   build-cache:

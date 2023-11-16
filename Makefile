@@ -7,6 +7,8 @@ APP_PORT=4326
 NAMESPACE=spring-boot-template
 HELM_CHART=helm-chart
 
+TRIVY_ARGS=
+
 help:
 	@grep -E '^[1-9a-zA-Z_-]+:.*?## .*$$|(^#--)' $(MAKEFILE_LIST) \
 	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m %-43s\033[0m %s\n", $$1, $$2}' \
@@ -26,9 +28,9 @@ debug: ## debug the service container with app by running docker and shelling in
 	docker-compose exec -it $(APP_SERVICE_NAME) //bin/bash
 
 .PHONY: scan
-scan:
+scan: ## performs a vulnerability scan on a docker image
 	docker save $(APP_NAME):latest -o /tmp/$(APP_NAME).tar
-	docker-compose run --rm -v /tmp/$(APP_NAME).tar:/$(APP_NAME).tar trivy image --input $(APP_NAME).tar
+	docker-compose run --rm -v /tmp/$(APP_NAME).tar:/$(APP_NAME).tar -v $(PWD):/results trivy image $(TRIVY_ARGS) --input $(APP_NAME).tar
 
 .PHONY: build
 build: ## build docker image
