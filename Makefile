@@ -1,5 +1,6 @@
 APP_SERVICE_NAME=app
 BUILDER_SERVICE_NAME=builder
+DOCKER_SCAN_SERVICE_NAME=docker-scan
 
 APP_NAME=spring-boot-template
 APP_PORT=4326
@@ -7,7 +8,11 @@ APP_PORT=4326
 NAMESPACE=spring-boot-template
 HELM_CHART=helm-chart
 
-TRIVY_ARGS=
+DOCKER_SCAN_ARGS=
+DOCKER_SCAN_CMD=$(DOCKER_SCAN_SERVICE_NAME) image --input /$(APP_NAME).tar $(DOCKER_SCAN_ARGS)
+
+AWS_ECR_URI=localhost.localstack.cloud:4510
+DOCKER_ECR_TAG="$(AWS_ECR_URI)/$(APP_NAME)"
 
 help:
 	@grep -E '^[1-9a-zA-Z_-]+:.*?## .*$$|(^#--)' $(MAKEFILE_LIST) \
@@ -17,7 +22,7 @@ help:
 #-- gradle:
 .PHONY: build
 build: ## build gradle project
-	docker-compose run --rm $(BUILDER_SERVICE_NAME) ./gradlew clean build
+	docker-compose run --rm $(BUILDER_SERVICE_NAME) ./gradlew build
 
 .PHONY: owasp-check
 owasp-check: ## OWASP dependency check
@@ -42,9 +47,11 @@ debug: ## debug the service container with app by running docker and shelling in
 	docker-compose exec -it $(APP_SERVICE_NAME) //bin/bash
 
 .PHONY: scan
-scan: ## performs a vulnerability scan on a docker image
-	docker save $(APP_NAME):latest -o /tmp/$(APP_NAME).tar
-	docker-compose run --rm -v /tmp/$(APP_NAME).tar:/$(APP_NAME).tar -v $(PWD):/results trivy image $(TRIVY_ARGS) --input $(APP_NAME).tar
+scan: build-image ## performs a vulnerability scan on a docker image
+	mkdir -p tmp
+	docker save $(APP_NAME):latest -o tmp/$(APP_NAME).tar
+	docker-compose run --rm -v $(PWD)/tmp/$(APP_NAME).tar:/$(APP_NAME).tar $(DOCKER_SCAN_CMD)
+	rm -rf tmp
 
 .PHONY: destroy
 destroy: ## remove the app and all containers, images and volumes
@@ -73,8 +80,6 @@ port-forward: ## make port forward to k8s service
 	kubectl port-forward -n $(NAMESPACE) svc/$(APP_NAME) $(APP_PORT):$(APP_PORT)
 
 #-- localstack:
-AWS_ECR_URI=localhost.localstack.cloud:4510
-DOCKER_ECR_TAG="$(AWS_ECR_URI)/$(APP_NAME)"
 
 .PHONY: ecr-login
 ecr-login: ## login to ECR

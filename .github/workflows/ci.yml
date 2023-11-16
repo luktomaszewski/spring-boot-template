@@ -40,10 +40,10 @@ jobs:
       - name: Build Docker image
         run: make build-image
 
-      - name: Run Trivy Scan
-        run: make scan TRIVY_ARGS="-q -f sarif -o /results/trivy-results.sarif"
+      - name: Run Docker image scan
+        run: make scan DOCKER_SCAN_ARGS="-q -f sarif -o /results/trivy-results.sarif"
 
-      - name: Upload Trivy Scan Results
+      - name: Upload Docker image scan results
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ github.workspace }}/trivy-results.sarif

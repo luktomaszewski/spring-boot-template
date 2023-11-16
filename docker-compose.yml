@@ -10,6 +10,7 @@ services:
       dockerfile: build.Dockerfile
     volumes:
       - build-cache:/root/.gradle/caches/
+      - ./build:/app/build
 
   app:
     image: spring-boot-template:latest
@@ -20,9 +21,9 @@ services:
     ports:
       - "4326:4326"
 
-  trivy:
+  docker-scan:
     image: aquasec/trivy:latest
-    container_name: trivy
+    container_name: docker-scan
     volumes:
       - .:/results
 
