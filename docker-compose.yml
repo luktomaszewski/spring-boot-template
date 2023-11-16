@@ -25,6 +25,7 @@ services:
     image: aquasec/trivy:latest
     container_name: docker-scan
     volumes:
+      - ./tmp:/tmp
       - .:/results
 
 volumes:

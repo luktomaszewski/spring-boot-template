@@ -9,7 +9,7 @@ NAMESPACE=spring-boot-template
 HELM_CHART=helm-chart
 
 DOCKER_SCAN_ARGS=
-DOCKER_SCAN_CMD=$(DOCKER_SCAN_SERVICE_NAME) image --input /$(APP_NAME).tar $(DOCKER_SCAN_ARGS)
+DOCKER_SCAN_CMD=$(DOCKER_SCAN_SERVICE_NAME) image --input /tmp/$(APP_NAME).tar $(DOCKER_SCAN_ARGS)
 
 AWS_ECR_URI=localhost.localstack.cloud:4510
 DOCKER_ECR_TAG="$(AWS_ECR_URI)/$(APP_NAME)"
@@ -50,7 +50,7 @@ debug: ## debug the service container with app by running docker and shelling in
 scan: build-image ## performs a vulnerability scan on a docker image
 	mkdir -p tmp
 	docker save $(APP_NAME):latest -o tmp/$(APP_NAME).tar
-	docker-compose run --rm -v $(PWD)/tmp/$(APP_NAME).tar:/$(APP_NAME).tar $(DOCKER_SCAN_CMD)
+	docker-compose run --rm $(DOCKER_SCAN_CMD)
 	rm -rf tmp
 
 .PHONY: destroy
