@@ -13,30 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+      - name: Gradle Build
+        run: make build
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Build with Gradle
-        run: ./gradlew clean build
-
-      - name: OWASP dependency-check
-        run: ./gradlew dependencyCheckAnalyze
+      - name: OWASP Dependency Check
+        run: make owasp-check
 
   docker:
     runs-on: ubuntu-latest
@@ -57,7 +38,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Build Docker image
-        run: make build
+        run: make build-image
 
       - name: Run Trivy Scan
         run: make scan TRIVY_ARGS="-q -f sarif -o /results/trivy-results.sarif"

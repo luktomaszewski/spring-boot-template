@@ -14,7 +14,21 @@ help:
 	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m %-43s\033[0m %s\n", $$1, $$2}' \
 	| sed -e 's/\[32m #-- /[33m/'
 
+#-- gradle:
+.PHONY: build
+build: ## build gradle project
+	docker-compose run --rm $(BUILDER_SERVICE_NAME) ./gradlew clean build
+
+.PHONY: owasp-check
+owasp-check: ## OWASP dependency check
+	docker-compose run --rm $(BUILDER_SERVICE_NAME) ./gradlew dependencyCheckAnalyze
+
 #-- docker/docker-compose:
+.PHONY: build-image
+build-image: ## build docker image
+	docker-compose build $(BUILDER_SERVICE_NAME)
+	docker-compose build $(APP_SERVICE_NAME)
+
 .PHONY: up
 up: ## start the app
 	docker-compose up $(APP_SERVICE_NAME)
@@ -31,11 +45,6 @@ debug: ## debug the service container with app by running docker and shelling in
 scan: ## performs a vulnerability scan on a docker image
 	docker save $(APP_NAME):latest -o /tmp/$(APP_NAME).tar
 	docker-compose run --rm -v /tmp/$(APP_NAME).tar:/$(APP_NAME).tar -v $(PWD):/results trivy image $(TRIVY_ARGS) --input $(APP_NAME).tar
-
-.PHONY: build
-build: ## build docker image
-	docker-compose build $(BUILDER_SERVICE_NAME)
-	docker-compose build $(APP_SERVICE_NAME)
 
 .PHONY: destroy
 destroy: ## remove the app and all containers, images and volumes
@@ -72,7 +81,7 @@ ecr-login: ## login to ECR
 	awslocal ecr get-login-password | docker login --username AWS --password-stdin $(AWS_ECR_URI)
 
 .PHONY: ecr-publish
-ecr-publish: build ecr-login ## publish docker image to ECR
+ecr-publish: build-image ecr-login ## publish docker image to ECR
 	docker tag $(APP_NAME):latest $(DOCKER_ECR_TAG):latest
 	docker push $(DOCKER_ECR_TAG):latest
 
