@@ -14,6 +14,8 @@
 
 ## :memo: Prerequisites
 
+Before you begin, ensure you have met the following requirements:
+
 * `make`
 * `pre-commit`
 * `docker` + `kubectl`
@@ -21,6 +23,13 @@
 * `hadolint`
 * `jq`
 * `awslocal`
+
+For :apple: macOS users, you can use the `install-tools-macos.sh` script to easily install the necessary tools.
+Simply run the script in your terminal:
+
+```bash
+./install-tools-macos.sh
+````
 
 ## :rocket: Getting started
 
