@@ -25,6 +25,11 @@ down: ## stop the app, any running contains, and networking
 debug: ## debug the service container with app by running docker and shelling into it
 	docker-compose exec -it $(APP_SERVICE_NAME) //bin/bash
 
+.PHONY: scan
+scan:
+	docker save $(APP_NAME):latest -o /tmp/$(APP_NAME).tar
+	docker-compose run --rm -v /tmp/$(APP_NAME).tar:/$(APP_NAME).tar trivy image --input $(APP_NAME).tar
+
 .PHONY: build
 build: ## build docker image
 	docker-compose build $(BUILDER_SERVICE_NAME)

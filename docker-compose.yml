@@ -20,6 +20,10 @@ services:
     ports:
       - "4326:4326"
 
+  trivy:
+    image: aquasec/trivy:latest
+    container_name: trivy
+
 volumes:
   build-cache:
     name: build-cache
