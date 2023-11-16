@@ -33,13 +33,18 @@ repositories {
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter"
 
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude group: "org.yaml", module: "snakeyaml" // addressing CVE-2022-1471; fixed in Spring Boot 3.2.0
+    }
+
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-data-rest"
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
 
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$swaggerVersion"
+
+    implementation "org.yaml:snakeyaml:2.0" // addressing CVE-2022-1471; fixed in Spring Boot 3.2.0
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
