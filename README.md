@@ -24,14 +24,14 @@ Before you begin, ensure you have met the following requirements:
 * `jq`
 * `awslocal`
 
-For :apple: macOS users, you can use the `install-tools-macos.sh` script to easily install the necessary tools.
+For :apple: macOS users, you can use the [`install-tools-macos.sh`](instal-tools-macos.sh) script to easily install the necessary tools.
 Simply run the script in your terminal:
 
 ```bash
 ./install-tools-macos.sh
 ````
 
-## :rocket: Getting started
+## :rocket: Getting Started
 
 To see a list of available commands, run command:
 
@@ -39,12 +39,12 @@ To see a list of available commands, run command:
 make
 ```
 
-## How to reuse template
+## :recycle: Reuse Instructions
 
 This project includes a convenient script to help you quickly set up and customize the template for your specific needs.
-The script allows you to update the application name, port number and package name with ease.
+The [`generate.sh`](generate.sh) script allows you to update the application name, port number and package name with ease.
 
-### Usage
+**Usage**
 
 To use the script run the following command:
 
@@ -58,7 +58,7 @@ Options:
   --auto-name  set app name to the current directory name, this option cannot be used together with --name
 ```
 
-### Examples
+**Examples**
 
 To set the application name to `my-app`, use port `8080`, and set the package name to `com.example.myapp`:
 
