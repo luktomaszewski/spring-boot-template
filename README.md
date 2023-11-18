@@ -75,11 +75,11 @@ To automatically use the name of the current directory as the application name:
 Using this script simplifies the process of adapting the template to your project's requirements, allowing you to get
 started with your custom application more quickly.
 
-## Actuator
+## :stethoscope: Actuator
 
 * [`http://localhost:4326/actuator/health`](http://localhost:4326/actuator/health) - health information (status)
 
-## API Documentation
+## :sunglasses: API Documentation
 
 * [`http://localhost:4326/v3/api-docs`](http://localhost:4326/v3/api-docs) - API Docs [JSON]
 * [`http://localhost:4326/v3/api-docs.yaml`](http://localhost:4326/v3/api-docs.yaml) - API Docs [YAML]
