@@ -3,9 +3,9 @@
 export LC_ALL=C
 export LANG=C
 
-SUCCESSFUL="\xE2\x9C\x85"  # Checkmark emoji
-FAILED="\xE2\x9D\x8C"      # Cross Mark emoji
-TADA="\xF0\x9F\x8E\x89"    # Tada emoji
+SUCCESSFUL=$'\xE2\x9C\x94'    # Checkmark emoji
+FAILED=$'\xe2\x9c\x98'        # Cross Mark emoji
+TADA=$'\xF0\x9F\x8E\x89'      # Tada emoji
 
 ALL_TASKS_SUCCESSFUL=true
 
@@ -33,6 +33,23 @@ usage() {
         printf "  %s --auto-name\t\t# Automatically uses the name of the current directory\n\n" "$(basename "$0")"
     fi
     exit 1
+}
+
+color_print() {
+    local message=$1
+    local type=$2
+
+    case $type in
+        success)
+            printf "\e[32m%s\e[0m\n" "$message"
+            ;;
+        fail)
+            printf "\e[31m%s\e[0m\n" "$message"
+            ;;
+        *)
+            printf "%s\n" "$message"  # Default to no color
+            ;;
+    esac
 }
 
 # Function to update folder structure
@@ -74,13 +91,13 @@ find_and_replace() {
 log_step() {
     local step_name=$1
     shift
-    echo -n "$step_name... "
+    printf "%s... " "$step_name"
     "$@"  # Execute the command
     local status=$?
     if [ $status -eq 0 ]; then
-        echo -e "$SUCCESSFUL"
+        color_print "$SUCCESSFUL" success
     else
-        echo -e "$FAILED"
+        color_print "$FAILED" fail
         ALL_TASKS_SUCCESSFUL=false
     fi
     return $status
@@ -116,7 +133,7 @@ done
 
 # Check if both --name and --auto-name are provided
 if [ "$auto_name" = true ] && [ "$name_provided" = true ]; then
-    echo "Error: --name and --auto-name cannot be used together."
+    printf "Error: --name and --auto-name cannot be used together.\n"
     exit 1
 fi
 
@@ -168,7 +185,7 @@ log_step "Updating folder structure for test" update_folder_structure "src/test/
 log_step "Updating folder structure for integration tests" update_folder_structure "src/integration/java"
 
 if [ "$ALL_TASKS_SUCCESSFUL" = true ]; then
-    echo -e "\033[32mAll tasks completed! $TADA\033[0m"
+    color_print "All tasks completed! $TADA" success
 else
-    echo -e "\033[31mSome tasks failed. Please check the logs above. $FAILED\033[0m"
+    color_print "$FAILED Some tasks failed. Please check the logs above." fail
 fi
