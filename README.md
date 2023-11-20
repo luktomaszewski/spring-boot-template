@@ -24,11 +24,13 @@ Before you begin, ensure you have met the following requirements:
 * `jq`
 * `awslocal`
 
-For :apple: macOS users, you can use the [`install-tools-macos.sh`](instal-tools-macos.sh) script to easily install the necessary tools.
-Simply run the script in your terminal:
+For :apple: macOS users, you can use the [`Brewfile`](Brewfile) script to simplify the installation of all the
+necessary dependencies.
+
+If you have Homebrew installed, follow these steps:
 
 ```bash
-./install-tools-macos.sh
+brew bundle
 ````
 
 ## :rocket: Getting Started
