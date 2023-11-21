@@ -46,8 +46,8 @@ down: ## stop the app, any running contains, and networking
 debug: ## debug the service container with app by running docker and shelling into it
 	docker-compose exec -it $(APP_SERVICE_NAME) //bin/bash
 
-.PHONY: scan
-scan: build-image ## performs a vulnerability scan on a docker image
+.PHONY: scan-image
+scan-image: build-image ## performs a vulnerability scan on a docker image
 	mkdir -p tmp
 	docker save $(APP_NAME):latest -o tmp/$(APP_NAME).tar
 	docker-compose run --rm $(DOCKER_SCAN_CMD)
