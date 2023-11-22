@@ -9,9 +9,7 @@ brew install helm
 brew install pre-commit
 brew install hadolint
 brew install jq
-
-brew install python # required for installing pip
-pip install awscli-local
+brew install awscli-local
 
 echo "make version:" && make --version
 echo "pre-commit version:" && pre-commit --version
