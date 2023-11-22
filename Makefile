@@ -29,10 +29,17 @@ owasp-check: ## OWASP dependency check
 	docker-compose run --rm $(BUILDER_SERVICE_NAME) ./gradlew dependencyCheckAnalyze
 
 #-- docker:
-.PHONY: build-image
-build-image: ## build docker image
+.PHONY: image-build
+image-build: ## build docker image
 	docker-compose build $(BUILDER_SERVICE_NAME)
 	docker-compose build $(APP_SERVICE_NAME)
+
+.PHONY: image-scan
+image-scan: image-build ## performs a vulnerability scan on a docker image
+	mkdir -p tmp
+	docker save $(APP_NAME):latest -o tmp/$(APP_NAME).tar
+	docker-compose run --rm $(DOCKER_SCAN_CMD)
+	rm -rf tmp
 
 .PHONY: up
 up: ## start the app
@@ -45,13 +52,6 @@ down: ## stop the app, any running contains, and networking
 .PHONY: debug
 debug: ## debug the service container with app by running docker and shelling into it
 	docker-compose exec -it $(APP_SERVICE_NAME) //bin/bash
-
-.PHONY: scan-image
-scan-image: build-image ## performs a vulnerability scan on a docker image
-	mkdir -p tmp
-	docker save $(APP_NAME):latest -o tmp/$(APP_NAME).tar
-	docker-compose run --rm $(DOCKER_SCAN_CMD)
-	rm -rf tmp
 
 .PHONY: destroy
 destroy: ## remove the app and all containers, images and volumes
@@ -90,7 +90,7 @@ ecr-login: ## login to ECR
 	awslocal ecr get-login-password | docker login --username AWS --password-stdin $(AWS_ECR_URI)
 
 .PHONY: ecr-publish
-ecr-publish: build-image ecr-login ## publish docker image to ECR
+ecr-publish: image-build ecr-login ## publish docker image to ECR
 	docker tag $(APP_NAME):latest $(DOCKER_ECR_TAG):latest
 	docker push $(DOCKER_ECR_TAG):latest
 

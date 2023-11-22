@@ -38,10 +38,10 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Build Docker image
-        run: make build-image
+        run: make image-build
 
       - name: Run Docker image scan
-        run: make scan-image DOCKER_SCAN_ARGS="-q -f sarif -o /results/trivy-results.sarif"
+        run: make image-scan DOCKER_SCAN_ARGS="-q -f sarif -o /results/trivy-results.sarif"
 
       - name: Upload Docker image scan results
         uses: github/codeql-action/upload-sarif@v2
