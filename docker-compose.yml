@@ -13,7 +13,7 @@ services:
       - ./build:/app/build
 
   app:
-    image: spring-boot-template:latest
+    image: spring-boot-template:${TAG-latest}
     container_name: spring-boot-template
     build:
       context: .

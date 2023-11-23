@@ -2,6 +2,8 @@ APP_SERVICE_NAME=app
 BUILDER_SERVICE_NAME=builder
 DOCKER_SCAN_SERVICE_NAME=docker-scan
 
+DOCKER_TAG=latest
+
 APP_NAME=spring-boot-template
 APP_PORT=4326
 
@@ -9,10 +11,13 @@ NAMESPACE=spring-boot-template
 HELM_CHART=helm-chart
 
 DOCKER_SCAN_ARGS=
-DOCKER_SCAN_CMD=$(DOCKER_SCAN_SERVICE_NAME) image --input /tmp/$(APP_NAME).tar $(DOCKER_SCAN_ARGS)
+DOCKER_SCAN_INPUT_PATH=tmp/$(APP_NAME)-$(DOCKER_TAG).tar
+DOCKER_SCAN_CMD=$(DOCKER_SCAN_SERVICE_NAME) image --input $(DOCKER_SCAN_INPUT_PATH) $(DOCKER_SCAN_ARGS)
 
 AWS_ECR_URI=localhost.localstack.cloud:4510
 DOCKER_ECR_TAG="$(AWS_ECR_URI)/$(APP_NAME)"
+
+.SILENT:
 
 help:
 	@grep -E '^[1-9a-zA-Z_-]+:.*?## .*$$|(^#--)' $(MAKEFILE_LIST) \
@@ -32,12 +37,12 @@ owasp-check: ## OWASP dependency check
 .PHONY: image-build
 image-build: ## build docker image
 	docker-compose build $(BUILDER_SERVICE_NAME)
-	docker-compose build $(APP_SERVICE_NAME)
+	TAG=$(DOCKER_TAG) docker-compose build $(APP_SERVICE_NAME)
 
 .PHONY: image-scan
 image-scan: image-build ## performs a vulnerability scan on a docker image
 	mkdir -p tmp
-	docker save $(APP_NAME):latest -o tmp/$(APP_NAME).tar
+	docker save $(APP_NAME):$(DOCKER_TAG) -o $(DOCKER_SCAN_INPUT_PATH)
 	docker-compose run --rm $(DOCKER_SCAN_CMD)
 	rm -rf tmp
 
@@ -91,8 +96,8 @@ ecr-login: ## login to ECR
 
 .PHONY: ecr-publish
 ecr-publish: image-build ecr-login ## publish docker image to ECR
-	docker tag $(APP_NAME):latest $(DOCKER_ECR_TAG):latest
-	docker push $(DOCKER_ECR_TAG):latest
+	docker tag $(APP_NAME):$(DOCKER_TAG) $(DOCKER_ECR_TAG):$(DOCKER_TAG)
+	docker push $(DOCKER_ECR_TAG):$(DOCKER_TAG)
 
 .PHONY: ecr-images
 ecr-images: ## list docker images in ECR repository
