@@ -40,6 +40,9 @@ dependencies {
 
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$swaggerVersion"
 
+    implementation "ch.qos.logback:logback-classic:1.4.12" // Because of: CVE-2023-6378
+    implementation "ch.qos.logback:logback-core:1.4.12" // Because of: CVE-2023-6378
+
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
