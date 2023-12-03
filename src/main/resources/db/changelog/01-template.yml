@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: "create-sequence-template-seq"
+      author: lomasz
+      changes:
+        - createSequence:
+            sequenceName: template_seq
+            incrementBy: 1
+            startValue: 1
+  - changeSet:
+      id: 1
+      author: lomasz
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: template
+      changes:
+        - createTable:
+            tableName: template
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_template_entity
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: acronym
+                  type: varchar(5)
+              - column:
+                  name: budget
+                  type: bigint
+      rollback:
+        - dropTable:
+            tableName: template
