@@ -6,14 +6,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
+@ToString
+@Table(name = "template")
 public class TemplateEntity implements Serializable {
 
     @Serial
