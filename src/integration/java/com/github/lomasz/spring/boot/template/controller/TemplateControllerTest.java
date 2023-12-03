@@ -82,9 +82,13 @@ class TemplateControllerTest {
 
         String location = result.getResponse().getHeader("Location");
 
-        assertThat(location).isNotNull();
-
         Long id = Long.valueOf(location.substring(location.lastIndexOf("/") + 1));
+
+        String expectedLocation = "http://localhost/api/templates/" + id;
+
+        assertThat(location)
+                .isNotNull()
+                .isEqualTo(expectedLocation);
 
         Optional<TemplateEntity> savedTemplate = templateRepository.findById(id);
 

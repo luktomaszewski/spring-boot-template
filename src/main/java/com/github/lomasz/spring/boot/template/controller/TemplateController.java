@@ -37,10 +37,9 @@ public class TemplateController implements TemplateApiDoc {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Override
     public ResponseEntity<Void> add(@RequestBody @Valid NewTemplateDto newDto) {
         Long id = templateService.create(newDto);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/templates/{id}")
                 .buildAndExpand(id)
                 .toUri();
