@@ -17,8 +17,6 @@ DOCKER_SCAN_CMD=$(DOCKER_SCAN_SERVICE_NAME) image --input $(DOCKER_SCAN_INPUT_PA
 AWS_ECR_URI=localhost.localstack.cloud:4510
 DOCKER_ECR_TAG="$(AWS_ECR_URI)/$(APP_NAME)"
 
-.SILENT:
-
 help:
 	@grep -E '^[1-9a-zA-Z_-]+:.*?## .*$$|(^#--)' $(MAKEFILE_LIST) \
 	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m %-43s\033[0m %s\n", $$1, $$2}' \
