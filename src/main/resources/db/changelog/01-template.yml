@@ -8,7 +8,7 @@ databaseChangeLog:
             incrementBy: 1
             startValue: 1
   - changeSet:
-      id: 1
+      id: "create-table-template"
       author: lomasz
       preConditions:
         onFail: MARK_RAN
