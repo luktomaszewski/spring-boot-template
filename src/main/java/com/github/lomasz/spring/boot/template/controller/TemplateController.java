@@ -27,7 +27,6 @@ public class TemplateController implements TemplateApiDoc {
     private final TemplateService templateService;
 
     @GetMapping
-    @Override
     public ResponseEntity<SearchResult<TemplateDto>> search(
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "20") int size,
@@ -48,7 +47,6 @@ public class TemplateController implements TemplateApiDoc {
     }
 
     @GetMapping("/{id}")
-    @Override
     public ResponseEntity<TemplateDto> getById(@PathVariable("id") Long id) {
         return templateService.findById(id)
                 .map(ResponseEntity::ok)
