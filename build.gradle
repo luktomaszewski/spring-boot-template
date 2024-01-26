@@ -44,6 +44,7 @@ dependencies {
     implementation "org.liquibase:liquibase-core:$liquibaseVersion"
 
     implementation "com.fasterxml.jackson.core:jackson-databind:2.16.0" // Because of: CVE-2023-35116
+    implementation 'com.jayway.jsonpath:json-path:2.9.0' // Because of: CVE-2023-51074
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
