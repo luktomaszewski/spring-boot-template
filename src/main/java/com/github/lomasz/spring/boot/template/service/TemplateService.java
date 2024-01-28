@@ -10,7 +10,7 @@ import com.github.lomasz.spring.boot.template.repository.TemplateRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.apachecommons.CommonsLog;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,7 +18,7 @@ import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.stereotype.Service;
 
 @Service
-@CommonsLog
+@Slf4j
 @RequiredArgsConstructor
 public class TemplateService {
 
@@ -44,9 +44,9 @@ public class TemplateService {
     }
 
     public Long create(NewTemplateDto newDto) {
-        log.info("Saving new object: " + newDto);
+        log.info("Saving new object: {}", newDto);
         TemplateEntity savedEntity = templateRepository.save(templateMapper.toEntity(newDto));
-        log.info("New entity saved in the database successfully: " + savedEntity);
+        log.info("New entity saved in the database successfully: {}", savedEntity);
         return savedEntity.getId();
     }
 

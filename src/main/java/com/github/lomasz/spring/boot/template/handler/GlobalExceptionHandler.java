@@ -5,13 +5,13 @@ import com.github.lomasz.spring.boot.template.exception.TechnicalException;
 import com.github.lomasz.spring.boot.template.model.dto.ErrorDto;
 import java.util.Collections;
 import java.util.List;
-import lombok.extern.apachecommons.CommonsLog;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@CommonsLog
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -27,14 +27,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<List<ErrorDto>> handleBusinessException(BusinessException exception) {
-        log.error("Business Exception: " + exception.getMessage(), exception);
+        log.error("Business Exception: {}", exception.getMessage(), exception);
         return ResponseEntity.badRequest()
                 .body(Collections.singletonList(new ErrorDto(exception.getMessage())));
     }
 
     @ExceptionHandler(TechnicalException.class)
     public ResponseEntity<List<ErrorDto>> handleTechnicalException(TechnicalException exception) {
-        log.error("Technical Exception: " + exception.getMessage(), exception);
+        log.error("Technical Exception: {}", exception.getMessage(), exception);
         return ResponseEntity.internalServerError()
                 .body(Collections.singletonList(new ErrorDto(exception.getMessage())));
     }
