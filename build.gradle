@@ -14,7 +14,6 @@ ext {
     junitVersion = "5.10.1"
     liquibaseVersion = "4.25.0"
     lombokVersion = "1.18.30"
-    mapStructVersion = "1.5.5.Final"
     mockitoVersion = "5.7.0"
     swaggerVersion = "2.2.0"
     h2Version = "2.2.224"
@@ -49,9 +48,6 @@ dependencies {
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
-
-    implementation "org.mapstruct:mapstruct:$mapStructVersion"
-    annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
 
     runtimeOnly "com.h2database:h2:$h2Version"
 
@@ -98,9 +94,7 @@ jacocoTestReport {
                     exclude: ["**/*Application*",
                               "**/config/**/*",
                               "**/exception/**/*",
-                              "**/model/**/*",
-                              "**/mapper/**/*",
-                              "**/repository/**/*"])
+                              "**/model/**/*"])
         }))
     }
 }

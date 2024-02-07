@@ -5,7 +5,6 @@
 * spring boot + web + jpa + rest
 * gradle wrapper
 * lombok
-* mapstruct
 * h2 (embedded)
 * junit 5
 * jacoco
