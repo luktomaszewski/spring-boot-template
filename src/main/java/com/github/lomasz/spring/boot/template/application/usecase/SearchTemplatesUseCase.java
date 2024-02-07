@@ -18,9 +18,9 @@ public class SearchTemplatesUseCase implements UseCase<SearchTemplatesUseCase.In
         return new Output(templateStorage.search(input.page(), input.size(), input.sortDirection(), input.sortProperty));
     }
 
-    public record Input(int page, int size, SortDirection sortDirection, String sortProperty) implements InputValues {
+    public record Input(int page, int size, SortDirection sortDirection, String sortProperty) implements UseCase.Input {
     }
 
-    public record Output(SearchResult<Template> result) implements OutputValues {
+    public record Output(SearchResult<Template> result) implements UseCase.Output {
     }
 }

@@ -16,10 +16,10 @@ public class AddTemplateUseCase implements UseCase<AddTemplateUseCase.Input, Add
         return new Output(templateStorage.create(input.newTemplate()));
     }
 
-    public record Input(NewTemplate newTemplate) implements InputValues {
+    public record Input(NewTemplate newTemplate) implements UseCase.Input {
     }
 
-    public record Output(Long id) implements OutputValues {
+    public record Output(Long id) implements UseCase.Output {
     }
 
 }

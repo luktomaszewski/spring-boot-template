@@ -17,10 +17,10 @@ public class GetTemplateUseCase implements UseCase<GetTemplateUseCase.Input, Get
         return new Output(templateStorage.findById(input.id()));
     }
 
-    public record Input(Long id) implements InputValues {
+    public record Input(Long id) implements UseCase.Input {
     }
 
-    public record Output(Optional<Template> template) implements OutputValues {
+    public record Output(Optional<Template> template) implements UseCase.Output {
     }
 
 }
