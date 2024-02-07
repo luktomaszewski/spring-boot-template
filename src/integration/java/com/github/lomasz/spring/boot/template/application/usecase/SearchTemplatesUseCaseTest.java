@@ -2,7 +2,8 @@ package com.github.lomasz.spring.boot.template.application.usecase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
+import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateEntity;
+import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateRepository;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
 import com.github.lomasz.spring.boot.template.application.port.TemplateStorage;
@@ -19,6 +20,9 @@ class SearchTemplatesUseCaseTest {
     @Autowired
     private TemplateStorage templateStorage;
 
+    @Autowired
+    private TemplateRepository templateRepository;
+
     private SearchTemplatesUseCase sut;
 
     @BeforeEach
@@ -30,20 +34,20 @@ class SearchTemplatesUseCaseTest {
     @Transactional
     void shouldReturnSortedItems() {
         // given
-        NewTemplate johnDoe = NewTemplate.builder()
+        TemplateEntity johnDoe = TemplateEntity.builder()
                 .name("John Doe")
                 .acronym("JD")
                 .budget(100000L)
                 .build();
 
-        NewTemplate janKowalski = NewTemplate.builder()
+        TemplateEntity janKowalski = TemplateEntity.builder()
                 .name("Jan Kowalski")
                 .acronym("JK")
                 .budget(200000L)
                 .build();
 
-        templateStorage.create(johnDoe);
-        templateStorage.create(janKowalski);
+        templateRepository.save(johnDoe);
+        templateRepository.save(janKowalski);
 
         // when
         SearchTemplatesUseCase.Output result = sut.execute(

@@ -9,10 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateEntity;
+import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateRepository;
 import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
-import com.github.lomasz.spring.boot.template.application.port.TemplateStorage;
 import jakarta.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
@@ -41,7 +42,7 @@ class TemplateControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private TemplateStorage templateStorage;
+    private TemplateRepository templateRepository;
 
     @Autowired
     private RequestIdFilter requestIdFilter;
@@ -87,13 +88,13 @@ class TemplateControllerTest {
                 .isNotNull()
                 .isEqualTo(expectedLocation);
 
-        Optional<Template> savedTemplate = templateStorage.findById(id);
+        Optional<TemplateEntity> entity = templateRepository.findById(id);
 
-        assertTrue(savedTemplate.isPresent());
-        assertThat(savedTemplate.get().getId()).isEqualTo(id);
-        assertThat(savedTemplate.get().getName()).isEqualTo(name);
-        assertThat(savedTemplate.get().getAcronym()).isEqualTo(acronym);
-        assertThat(savedTemplate.get().getBudget()).isEqualTo(budget);
+        assertTrue(entity.isPresent());
+        assertThat(entity.get().getId()).isEqualTo(id);
+        assertThat(entity.get().getName()).isEqualTo(name);
+        assertThat(entity.get().getAcronym()).isEqualTo(acronym);
+        assertThat(entity.get().getBudget()).isEqualTo(budget);
     }
 
     @Test
@@ -177,23 +178,23 @@ class TemplateControllerTest {
         String templateAcronym = "JD";
         Long templateBudget = 182005000L;
 
-        NewTemplate johnDoe = NewTemplate.builder()
+        TemplateEntity johnDoe = TemplateEntity.builder()
                 .name(templateName)
                 .acronym(templateAcronym)
-                        .budget(templateBudget)
+                .budget(templateBudget)
                 .build();
 
-        Long id = templateStorage.create(johnDoe);
+        TemplateEntity entity = templateRepository.save(johnDoe);
 
         // when
-        MvcResult result = mvc.perform(get(GET_BY_ID_URL, id).contentType(MediaType.APPLICATION_JSON))
+        MvcResult result = mvc.perform(get(GET_BY_ID_URL, entity.getId()).contentType(MediaType.APPLICATION_JSON))
                 // then
                 .andExpect(status().isOk())
                 .andReturn();
 
         Template responseBody = objectMapper.readValue(result.getResponse().getContentAsString(), Template.class);
 
-        assertThat(responseBody.getId()).isEqualTo(id);
+        assertThat(responseBody.getId()).isEqualTo(entity.getId());
         assertThat(responseBody.getName()).isEqualTo(templateName);
         assertThat(responseBody.getAcronym()).isEqualTo(templateAcronym);
         assertThat(responseBody.getBudget()).isEqualTo(templateBudget);
@@ -214,27 +215,27 @@ class TemplateControllerTest {
     @Transactional
     public void searchWithDefaultInputShouldReturnUnsortedItems() throws Exception {
         // given
-        NewTemplate johnDoe = NewTemplate.builder()
+        TemplateEntity johnDoe = TemplateEntity.builder()
                 .name("John Doe")
                 .acronym("JD")
                 .budget(1000000L)
                 .build();
 
-        NewTemplate janKowalski = NewTemplate.builder()
+        TemplateEntity janKowalski = TemplateEntity.builder()
                 .name("Jan Kowalski")
                 .acronym("JK")
                 .budget(3000000L)
                 .build();
 
-        NewTemplate juanitoPerez = NewTemplate.builder()
+        TemplateEntity juanitoPerez = TemplateEntity.builder()
                 .name("Juanito Perez")
                 .acronym("JP")
                 .budget(2000000L)
                 .build();
 
-        templateStorage.create(johnDoe);
-        templateStorage.create(janKowalski);
-        templateStorage.create(juanitoPerez);
+        templateRepository.save(johnDoe);
+        templateRepository.save(janKowalski);
+        templateRepository.save(juanitoPerez);
 
         // when
         MvcResult result = mvc.perform(get(GET_LIST_URL).contentType(MediaType.APPLICATION_JSON))
@@ -257,34 +258,34 @@ class TemplateControllerTest {
     @Transactional
     public void searchWithCustomInputShouldReturnItemsSortedByBudgetAsc() throws Exception {
         // given
-        NewTemplate johnDoe = NewTemplate.builder()
+        TemplateEntity johnDoe = TemplateEntity.builder()
                 .name("John Doe")
                 .acronym("JD")
                 .budget(1000000L)
                 .build();
 
-        NewTemplate janKowalski = NewTemplate.builder()
+        TemplateEntity janKowalski = TemplateEntity.builder()
                 .name("Jan Kowalski")
                 .acronym("JK")
                 .budget(3000000L)
                 .build();
 
-        NewTemplate juanitoPerez = NewTemplate.builder()
+        TemplateEntity juanitoPerez = TemplateEntity.builder()
                 .name("Juanito Perez")
                 .acronym("JP")
                 .budget(2000000L)
                 .build();
 
-        NewTemplate pierreEtPaul = NewTemplate.builder()
+        TemplateEntity pierreEtPaul = TemplateEntity.builder()
                 .name("Pierre et Paul")
                 .acronym("PP")
                 .budget(4000000L)
                 .build();
 
-        templateStorage.create(johnDoe);
-        templateStorage.create(janKowalski);
-        templateStorage.create(juanitoPerez);
-        templateStorage.create(pierreEtPaul);
+        templateRepository.save(johnDoe);
+        templateRepository.save(janKowalski);
+        templateRepository.save(juanitoPerez);
+        templateRepository.save(pierreEtPaul);
 
         // when
         MvcResult result = mvc.perform(get(GET_LIST_URL)

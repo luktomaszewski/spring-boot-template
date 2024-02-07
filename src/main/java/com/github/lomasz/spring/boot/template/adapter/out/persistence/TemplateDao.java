@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-class TemplateDao implements TemplateStorage {
+public class TemplateDao implements TemplateStorage {
 
     private final TemplateRepository templateRepository;
 

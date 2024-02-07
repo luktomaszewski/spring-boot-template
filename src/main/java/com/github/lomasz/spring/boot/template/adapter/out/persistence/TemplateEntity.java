@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "template")
-class TemplateEntity {
+public class TemplateEntity {
 
     private static final String SEQUENCE_NAME = "template_seq";
 

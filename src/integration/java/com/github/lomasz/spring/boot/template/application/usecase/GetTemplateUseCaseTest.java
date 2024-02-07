@@ -2,7 +2,8 @@ package com.github.lomasz.spring.boot.template.application.usecase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
+import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateEntity;
+import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateRepository;
 import com.github.lomasz.spring.boot.template.application.port.TemplateStorage;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,9 @@ class GetTemplateUseCaseTest {
     @Autowired
     private TemplateStorage templateStorage;
 
+    @Autowired
+    private TemplateRepository templateRepository;
+
     private GetTemplateUseCase sut;
 
     @BeforeEach
@@ -27,20 +31,20 @@ class GetTemplateUseCaseTest {
     @Transactional
     void shouldGetByIdWhenExists() {
         // given
-        NewTemplate newTemplate = NewTemplate.builder()
+        TemplateEntity newTemplate = TemplateEntity.builder()
                 .name("John Doe")
                 .acronym("JD")
                 .budget(100000L)
                 .build();
 
-        Long id = templateStorage.create(newTemplate);
+        TemplateEntity saved = templateRepository.save(newTemplate);
 
         // when
-        GetTemplateUseCase.Output result = sut.execute(new GetTemplateUseCase.Input(id));
+        GetTemplateUseCase.Output result = sut.execute(new GetTemplateUseCase.Input(saved.getId()));
 
         // then
         assertThat(result.template()).isNotEmpty();
-        assertThat(result.template().get().getId()).isEqualTo(id);
+        assertThat(result.template().get().getId()).isEqualTo(saved.getId());
         assertThat(result.template().get().getName()).isEqualTo("John Doe");
         assertThat(result.template().get().getAcronym()).isEqualTo("JD");
         assertThat(result.template().get().getBudget()).isEqualTo(100000L);
