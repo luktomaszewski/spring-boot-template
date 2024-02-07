@@ -9,6 +9,7 @@ plugins {
 }
 
 ext {
+    archUnitVersion = "1.2.1"
     jacocoVersion = "0.8.11"
     junitVersion = "5.10.1"
     liquibaseVersion = "4.25.0"
@@ -59,6 +60,8 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
 
+    testImplementation "com.tngtech.archunit:archunit-junit5:$archUnitVersion"
+
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }
@@ -75,7 +78,7 @@ spotless {
     java {
         importOrder()
         removeUnusedImports()
-//        palantirJavaFormat()
+        //palantirJavaFormat()
         indentWithSpaces(4)
     }
 }
