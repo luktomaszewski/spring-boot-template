@@ -6,7 +6,7 @@ import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateEn
 import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateRepository;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
-import com.github.lomasz.spring.boot.template.application.port.TemplateStorage;
+import com.github.lomasz.spring.boot.template.application.port.SearchTemplatePort;
 import jakarta.transaction.Transactional;
 import java.util.Comparator;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class SearchTemplatesUseCaseTest {
 
     @Autowired
-    private TemplateStorage templateStorage;
+    private SearchTemplatePort searchTemplatePort;
 
     @Autowired
     private TemplateRepository templateRepository;
@@ -27,7 +27,7 @@ class SearchTemplatesUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        sut = new SearchTemplatesUseCase(templateStorage);
+        sut = new SearchTemplatesUseCase(searchTemplatePort);
     }
 
     @Test

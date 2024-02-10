@@ -27,13 +27,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mapping.PropertyReferenceException;
 
 @ExtendWith(MockitoExtension.class)
-class TemplateDaoTest {
+class TemplatePersistenceAdapterTest {
 
     @Mock
     private TemplateRepository templateRepository;
 
     @InjectMocks
-    private TemplateDao sut;
+    private TemplatePersistenceAdapter sut;
 
     @Test
     void create() {

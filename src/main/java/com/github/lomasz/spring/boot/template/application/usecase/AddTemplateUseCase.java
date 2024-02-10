@@ -1,7 +1,7 @@
 package com.github.lomasz.spring.boot.template.application.usecase;
 
 import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
-import com.github.lomasz.spring.boot.template.application.port.TemplateStorage;
+import com.github.lomasz.spring.boot.template.application.port.AddTemplatePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AddTemplateUseCase implements UseCase<AddTemplateUseCase.Input, AddTemplateUseCase.Output> {
 
-    private final TemplateStorage templateStorage;
+    private final AddTemplatePort addTemplatePort;
 
     @Override
     public Output execute(Input input) {
-        return new Output(templateStorage.create(input.newTemplate()));
+        return new Output(addTemplatePort.create(input.newTemplate()));
     }
 
     public record Input(NewTemplate newTemplate) implements UseCase.Input {

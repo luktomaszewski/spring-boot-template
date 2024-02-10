@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateEntity;
 import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateRepository;
-import com.github.lomasz.spring.boot.template.application.port.TemplateStorage;
+import com.github.lomasz.spring.boot.template.application.port.GetTemplatePort;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class GetTemplateUseCaseTest {
 
     @Autowired
-    private TemplateStorage templateStorage;
+    private GetTemplatePort getTemplatePort;
 
     @Autowired
     private TemplateRepository templateRepository;
@@ -24,7 +24,7 @@ class GetTemplateUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        sut = new GetTemplateUseCase(templateStorage);
+        sut = new GetTemplateUseCase(getTemplatePort);
     }
 
     @Test

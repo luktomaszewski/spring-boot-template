@@ -5,7 +5,9 @@ import com.github.lomasz.spring.boot.template.application.domain.model.NewTempla
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
-import com.github.lomasz.spring.boot.template.application.port.TemplateStorage;
+import com.github.lomasz.spring.boot.template.application.port.AddTemplatePort;
+import com.github.lomasz.spring.boot.template.application.port.GetTemplatePort;
+import com.github.lomasz.spring.boot.template.application.port.SearchTemplatePort;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TemplateDao implements TemplateStorage {
+public class TemplatePersistenceAdapter implements AddTemplatePort, SearchTemplatePort, GetTemplatePort {
 
     private final TemplateRepository templateRepository;
 
