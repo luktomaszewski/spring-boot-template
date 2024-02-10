@@ -9,14 +9,15 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.util.UUID;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+@ExtendWith(MockitoExtension.class)
 class RequestIdFilterTest {
 
     private static final String X_REQUEST_ID = "X-Request-ID";
@@ -24,13 +25,7 @@ class RequestIdFilterTest {
     @Mock
     private FilterChain filterChain;
 
-    private RequestIdFilter sut;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        sut = new RequestIdFilter();
-    }
+    private final RequestIdFilter sut = new RequestIdFilter();
 
     @Test
     void shouldGenerateRequestIdIfAbsent() throws IOException, ServletException {
