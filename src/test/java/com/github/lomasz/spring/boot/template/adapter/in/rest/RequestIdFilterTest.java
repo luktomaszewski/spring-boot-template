@@ -1,4 +1,4 @@
-package com.github.lomasz.spring.boot.template.adapter.api;
+package com.github.lomasz.spring.boot.template.adapter.in.rest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

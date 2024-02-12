@@ -1,4 +1,4 @@
-package com.github.lomasz.spring.boot.template.adapter.api;
+package com.github.lomasz.spring.boot.template.adapter.in.rest;
 
 import com.github.lomasz.spring.boot.template.application.domain.exception.BusinessException;
 import com.github.lomasz.spring.boot.template.application.domain.exception.TechnicalException;

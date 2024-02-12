@@ -20,7 +20,7 @@ class ArchitectureTests {
             .domainServices("..application.port..")
             .applicationServices("..application.usecase..")
             .adapter("out.persistence", "..adapter.out.persistence..")
-            .adapter("api", "..adapter.api..");
+            .adapter("in.rest", "..adapter.in.rest..");
 
     @ArchTest
     static ArchRule noGenericExceptions = GeneralCodingRules.NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS;

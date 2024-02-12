@@ -1,4 +1,4 @@
-package com.github.lomasz.spring.boot.template.adapter.api;
+package com.github.lomasz.spring.boot.template.adapter.in.rest;
 
 import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
@@ -10,7 +10,6 @@ import com.github.lomasz.spring.boot.template.application.usecase.SearchTemplate
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +38,7 @@ class TemplateController implements TemplateApiDoc {
         return ResponseEntity.ok(searchTemplatesUseCase.execute(new SearchTemplatesUseCase.Input(page, size, sortDirection, sortProperty)).result());
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<Void> add(@RequestBody @Valid NewTemplate newDto) {
         Long id = addTemplateUseCase.execute(new AddTemplateUseCase.Input(newDto)).id();
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()

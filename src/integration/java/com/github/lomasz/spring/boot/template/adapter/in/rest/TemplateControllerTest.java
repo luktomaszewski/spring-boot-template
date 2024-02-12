@@ -1,4 +1,4 @@
-package com.github.lomasz.spring.boot.template.adapter.api;
+package com.github.lomasz.spring.boot.template.adapter.in.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -136,8 +137,8 @@ class TemplateControllerTest {
                 result.getResponse().getContentAsString(), new TypeReference<>() {
                 });
 
-        assertThat(responseBody).isNotNull();
-        assertThat(responseBody).hasSize(1);
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody).hasSize(1);
         assertThat(responseBody.get(0).getMessage()).isEqualTo("Wrong value in the field: budget");
         assertThat(responseBody.get(0).getDetails()).isEqualTo("The value must be positive");
     }
@@ -164,8 +165,8 @@ class TemplateControllerTest {
                 result.getResponse().getContentAsString(), new TypeReference<>() {
                 });
 
-        assertThat(responseBody).isNotNull();
-        assertThat(responseBody).hasSize(1);
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody).hasSize(1);
         assertThat(responseBody.get(0).getMessage()).isEqualTo("Wrong value in the field: acronym");
         assertThat(responseBody.get(0).getDetails()).isEqualTo("size must be between 0 and 5");
     }

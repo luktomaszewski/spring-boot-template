@@ -1,4 +1,4 @@
-package com.github.lomasz.spring.boot.template.adapter.api;
+package com.github.lomasz.spring.boot.template.adapter.in.rest;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
