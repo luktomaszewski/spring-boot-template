@@ -1,6 +1,5 @@
 package com.github.lomasz.spring.boot.template.adapter.out.persistence;
 
-import com.github.lomasz.spring.boot.template.application.domain.exception.BusinessException;
 import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
@@ -31,7 +30,7 @@ public class TemplatePersistenceAdapter implements AddTemplatePort, SearchTempla
         try {
             resultPage = templateRepository.findAll(PageRequest.of(page, size, mapDirection(sortDirection), sortProperty));
         } catch (PropertyReferenceException e) {
-            throw new BusinessException("No sort property found: " + e.getPropertyName());
+            throw new NoSortPropertyException("No sort property found: " + e.getPropertyName());
         }
         List<Template> items = resultPage.getContent().stream()
                 .map(TemplateEntity::toDomain)
