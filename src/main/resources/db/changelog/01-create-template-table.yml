@@ -2,11 +2,19 @@ databaseChangeLog:
   - changeSet:
       id: "create-sequence-template-seq"
       author: lomasz
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          sequenceExists:
+            sequenceName: template_seq
       changes:
         - createSequence:
             sequenceName: template_seq
             incrementBy: 1
             startValue: 1
+      rollback:
+        - dropSequence:
+            sequenceName: template_seq
   - changeSet:
       id: "create-table-template"
       author: lomasz

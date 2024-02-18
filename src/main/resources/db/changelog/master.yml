@@ -1,4 +1,4 @@
 databaseChangeLog:
   - include:
-      file: 01-template.yml
+      file: 01-create-template-table.yml
       relativeToChangelogFile: true
