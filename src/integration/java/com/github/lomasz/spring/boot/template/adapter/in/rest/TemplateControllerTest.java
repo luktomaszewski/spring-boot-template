@@ -1,10 +1,13 @@
 package com.github.lomasz.spring.boot.template.adapter.in.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -16,14 +19,14 @@ import com.github.lomasz.spring.boot.template.application.domain.model.SearchRes
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
 import jakarta.transaction.Transactional;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,9 +38,11 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TemplateControllerTest {
 
-    private static final String GET_LIST_URL = "/api/templates";
-    private static final String GET_BY_ID_URL = "/api/templates/{id}";
     private static final String CREATE_URL = "/api/templates";
+    private static final String GET_BY_ID_URL = "/api/templates/{id}";
+    private static final String SEARCH_URL = "/api/templates";
+
+    private static final String X_REQUEST_ID = "X-Request-ID";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -61,8 +66,9 @@ class TemplateControllerTest {
     }
 
     @Test
+    @DisplayName("operation: add, should: return HttpStatus = 201 and Location header, when: add correctly")
     @Transactional
-    public void add() throws Exception {
+    void add() throws Exception {
         // given
         String name = "John Doe";
         String acronym = "JD";
@@ -77,17 +83,17 @@ class TemplateControllerTest {
                 // then
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
+                .andExpect(header().exists(X_REQUEST_ID))
                 .andReturn();
 
         String location = result.getResponse().getHeader("Location");
 
         Long id = Long.valueOf(location.substring(location.lastIndexOf("/") + 1));
-
-        String expectedLocation = "http://localhost/api/templates/" + id;
+        assertThat(id).isNotNull();
 
         assertThat(location)
                 .isNotNull()
-                .isEqualTo(expectedLocation);
+                .contains(GET_BY_ID_URL.replace("{id}", id.toString()));
 
         Optional<TemplateEntity> entity = templateRepository.findById(id);
 
@@ -99,81 +105,81 @@ class TemplateControllerTest {
     }
 
     @Test
+    @DisplayName("operation: add, should: return HttpStatus = 400 and ErrorResponse, when: acronym is null")
     @Transactional
-    public void addWhenNewTemplateDtoWithMissingValueShouldReturnHttpStatusBadRequest() throws Exception {
+    void addWhenNewTemplateDtoWithMissingValueShouldReturnHttpStatusBadRequest() throws Exception {
         // given
-        String templateName = "John Doe";
-        Long templateBudget = 182005000L;
-
-        NewTemplate johnDoe = new NewTemplate(templateName, null, templateBudget);
+        NewTemplate johnDoe = new NewTemplate("John Doe", null, 182005000L);
 
         // when
         mvc.perform(post(CREATE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(header().exists(X_REQUEST_ID))
+                .andExpect(jsonPath("$.type").value("about:blank"))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.title").value("Business Exception"))
+                .andExpect(jsonPath("$.detail").value("Invalid request content"))
+                .andExpect(jsonPath("$.errors").exists())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors", contains("acronym: must not be null")))
+                .andExpect(jsonPath("$.instance").value(CREATE_URL));
     }
 
     @Test
+    @DisplayName("operation: add, should: return HttpStatus = 400 and ErrorResponse, when: budget is negative value")
     @Transactional
-    public void addWhenNewTemplateDtoWithNegativeBudgetValueShouldReturnHttpStatusBadRequest() throws Exception {
+    void addWhenNewTemplateDtoWithNegativeBudgetValueShouldReturnHttpStatusBadRequest() throws Exception {
         // given
-        String templateName = "John Doe";
-        String templateAcronym = "JD";
-        Long templateBudget = -182005000L;
-
-        NewTemplate johnDoe = new NewTemplate(templateName, templateAcronym, templateBudget);
+        NewTemplate johnDoe = new NewTemplate("John Doe", "JD", -182005000L);
 
         // when
-        MvcResult result = mvc.perform(post(CREATE_URL)
+        mvc.perform(post(CREATE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
                 .andExpect(status().isBadRequest())
-                .andReturn();
-
-        List<ErrorDto> responseBody = objectMapper.readValue(
-                result.getResponse().getContentAsString(), new TypeReference<>() {
-                });
-
-        Assertions.assertThat(responseBody).isNotNull();
-        Assertions.assertThat(responseBody).hasSize(1);
-        assertThat(responseBody.get(0).getMessage()).isEqualTo("Wrong value in the field: budget");
-        assertThat(responseBody.get(0).getDetails()).isEqualTo("The value must be positive");
+                .andExpect(header().exists(X_REQUEST_ID))
+                .andExpect(jsonPath("$.type").value("about:blank"))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.title").value("Business Exception"))
+                .andExpect(jsonPath("$.detail").value("Invalid request content"))
+                .andExpect(jsonPath("$.errors").exists())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors", contains("budget: The value must be positive")))
+                .andExpect(jsonPath("$.instance").value(CREATE_URL));
     }
 
     @Test
+    @DisplayName("operation: add, should: return HttpStatus = 400 and ErrorResponse, when: too long acronym")
     @Transactional
-    public void addWhenNewTemplateDtoWithTooLongAcronymValueShouldReturnHttpStatusBadRequest() throws Exception {
+    void addWhenNewTemplateDtoWithTooLongAcronymValueShouldReturnHttpStatusBadRequest() throws Exception {
         // given
-        String templateName = "John Doe";
-        String templateAcronym = "JOHN DOE";
-        Long templateBudget = 182005000L;
-
-        NewTemplate johnDoe = new NewTemplate(templateName, templateAcronym, templateBudget);
+        NewTemplate johnDoe = new NewTemplate( "John Doe", "JOHN DOE", 182005000L);
 
         // when
-        MvcResult result = mvc.perform(post(CREATE_URL)
+        mvc.perform(post(CREATE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(johnDoe)))
                 // then
                 .andExpect(status().isBadRequest())
-                .andReturn();
-
-        List<ErrorDto> responseBody = objectMapper.readValue(
-                result.getResponse().getContentAsString(), new TypeReference<>() {
-                });
-
-        Assertions.assertThat(responseBody).isNotNull();
-        Assertions.assertThat(responseBody).hasSize(1);
-        assertThat(responseBody.get(0).getMessage()).isEqualTo("Wrong value in the field: acronym");
-        assertThat(responseBody.get(0).getDetails()).isEqualTo("size must be between 0 and 5");
+                .andExpect(header().exists(X_REQUEST_ID))
+                .andExpect(jsonPath("$.type").value("about:blank"))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.title").value("Business Exception"))
+                .andExpect(jsonPath("$.detail").value("Invalid request content"))
+                .andExpect(jsonPath("$.errors").exists())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors", contains("acronym: size must be between 0 and 5")))
+                .andExpect(jsonPath("$.instance").value(CREATE_URL));
     }
 
     @Test
+    @DisplayName("operation: getById, should: return HttpStatus = 200 and Template, when: exists")
     @Transactional
-    public void getByIdWhenExistsShouldReturnTemplateDtoAndHttpStatusOk() throws Exception {
+    void getByIdWhenExistsShouldReturnTemplateDtoAndHttpStatusOk() throws Exception {
         // given
         String templateName = "John Doe";
         String templateAcronym = "JD";
@@ -188,33 +194,38 @@ class TemplateControllerTest {
         TemplateEntity entity = templateRepository.save(johnDoe);
 
         // when
-        MvcResult result = mvc.perform(get(GET_BY_ID_URL, entity.getId()).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get(GET_BY_ID_URL, entity.getId()).contentType(MediaType.APPLICATION_JSON))
                 // then
                 .andExpect(status().isOk())
-                .andReturn();
-
-        Template responseBody = objectMapper.readValue(result.getResponse().getContentAsString(), Template.class);
-
-        assertThat(responseBody.getId()).isEqualTo(entity.getId());
-        assertThat(responseBody.getName()).isEqualTo(templateName);
-        assertThat(responseBody.getAcronym()).isEqualTo(templateAcronym);
-        assertThat(responseBody.getBudget()).isEqualTo(templateBudget);
+                .andExpect(header().exists(X_REQUEST_ID))
+                .andExpect(jsonPath("$.id").value(entity.getId()))
+                .andExpect(jsonPath("$.name").value(templateName))
+                .andExpect(jsonPath("$.acronym").value(templateAcronym))
+                .andExpect(jsonPath("$.budget").value(templateBudget));
     }
 
     @Test
+    @DisplayName("operation: getById, should: return HttpStatus = 404 and ErrorResponse, when: doesn't exist")
     void getByIdWhenDoesntExistShouldReturnHttpStatusNotFound() throws Exception {
         // given
-        Long id = 99L;
 
         // when
-        mvc.perform(get(GET_BY_ID_URL, id).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get(GET_BY_ID_URL, 99L).contentType(MediaType.APPLICATION_JSON))
                 // then
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(header().exists(X_REQUEST_ID))
+                .andExpect(jsonPath("$.type").value("about:blank"))
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+                .andExpect(jsonPath("$.title").value(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(jsonPath("$.detail").value("Template with id=99 not found"))
+                .andExpect(jsonPath("$.instance").value(GET_BY_ID_URL.replace("{id}", "99")))
+                .andExpect(jsonPath("$.timestamp").exists());
     }
 
     @Test
+    @DisplayName("operation: search, should: return HttpStatus = 200 and unsorted items, when: default input")
     @Transactional
-    public void searchWithDefaultInputShouldReturnUnsortedItems() throws Exception {
+    void searchWithDefaultInputShouldReturnUnsortedItems() throws Exception {
         // given
         TemplateEntity johnDoe = TemplateEntity.builder()
                 .name("John Doe")
@@ -239,9 +250,10 @@ class TemplateControllerTest {
         templateRepository.save(juanitoPerez);
 
         // when
-        MvcResult result = mvc.perform(get(GET_LIST_URL).contentType(MediaType.APPLICATION_JSON))
+        MvcResult result = mvc.perform(get(SEARCH_URL).contentType(MediaType.APPLICATION_JSON))
                 // then
                 .andExpect(status().isOk())
+                .andExpect(header().exists(X_REQUEST_ID))
                 .andReturn();
 
         SearchResult<Template> searchResult = objectMapper.readValue(
@@ -256,8 +268,9 @@ class TemplateControllerTest {
     }
 
     @Test
+    @DisplayName("operation: search, should: return HttpStatus = 200 and sorted by budget (asc) items, when: custom input")
     @Transactional
-    public void searchWithCustomInputShouldReturnItemsSortedByBudgetAsc() throws Exception {
+    void searchWithCustomInputShouldReturnItemsSortedByBudgetAsc() throws Exception {
         // given
         TemplateEntity johnDoe = TemplateEntity.builder()
                 .name("John Doe")
@@ -289,7 +302,7 @@ class TemplateControllerTest {
         templateRepository.save(pierreEtPaul);
 
         // when
-        MvcResult result = mvc.perform(get(GET_LIST_URL)
+        MvcResult result = mvc.perform(get(SEARCH_URL)
                         .param("page", "1")
                         .param("size", "2")
                         .param("order", "DESC")
@@ -297,6 +310,7 @@ class TemplateControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 // then
                 .andExpect(status().isOk())
+                .andExpect(header().exists(X_REQUEST_ID))
                 .andReturn();
 
         SearchResult<Template> searchResult = objectMapper.readValue(
@@ -313,33 +327,45 @@ class TemplateControllerTest {
     }
 
     @Test
+    @DisplayName("operation: search, should: return HttpStatus = 400 and ErrorResponse, when: wrong sort field value")
     void searchWithWrongSortValueShouldReturnHttpStatusBadRequest() throws Exception {
         // given
 
         // when
-        mvc.perform(get(GET_LIST_URL).param("sort", "surname").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get(SEARCH_URL).param("sort", "surname").contentType(MediaType.APPLICATION_JSON))
                 // then
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(header().exists(X_REQUEST_ID))
+                .andExpect(jsonPath("$.type").value("about:blank"))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.title").value("Business Exception"))
+                .andExpect(jsonPath("$.detail").value("No sort property found: surname"))
+                .andExpect(jsonPath("$.instance").value(CREATE_URL))
+                .andExpect(jsonPath("$.timestamp").exists());
     }
 
     @Test
+    @DisplayName("should: return request with the same request id, when: provided")
     void sendRequestWithRequestIdShouldReturnTheSameRequestId() throws Exception {
         // given
         String requestId = "requestId";
 
         // when
-        mvc.perform(get(GET_LIST_URL).contentType(MediaType.APPLICATION_JSON).header("X-Request-ID", requestId))
+        mvc.perform(get(SEARCH_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(X_REQUEST_ID, requestId))
                 // then
-                .andExpect(header().string("X-Request-ID", requestId));
+                .andExpect(header().string(X_REQUEST_ID, requestId));
     }
 
     @Test
+    @DisplayName("should: return request with new  request id, when: not provided")
     void sendRequestWithoutRequestIdShouldReturnNewRequestId() throws Exception {
         // given
 
         // when
-        mvc.perform(get(GET_LIST_URL).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get(SEARCH_URL).contentType(MediaType.APPLICATION_JSON))
                 // then
-                .andExpect(header().exists("X-Request-ID"));
+                .andExpect(header().exists(X_REQUEST_ID));
     }
 }

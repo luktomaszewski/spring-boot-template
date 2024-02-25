@@ -1,5 +1,6 @@
 package com.github.lomasz.spring.boot.template.adapter.out.persistence;
 
+import com.github.lomasz.spring.boot.template.application.domain.exception.NotFoundException;
 import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
@@ -8,7 +9,6 @@ import com.github.lomasz.spring.boot.template.application.port.AddTemplatePort;
 import com.github.lomasz.spring.boot.template.application.port.GetTemplatePort;
 import com.github.lomasz.spring.boot.template.application.port.SearchTemplatePort;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -61,8 +61,9 @@ public class TemplatePersistenceAdapter implements AddTemplatePort, SearchTempla
     }
 
     @Override
-    public Optional<Template> findById(Long id) {
+    public Template findById(Long id) {
         return templateRepository.findById(id)
-                .map(TemplateEntity::toDomain);
+                .map(TemplateEntity::toDomain)
+                .orElseThrow(() -> new NotFoundException("Template with id=%s not found".formatted(id)));
     }
 }

@@ -10,6 +10,7 @@ import com.github.lomasz.spring.boot.template.application.port.SearchTemplatePor
 import jakarta.transaction.Transactional;
 import java.util.Comparator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,7 @@ class SearchTemplatesUseCaseTest {
     }
 
     @Test
+    @DisplayName("should: return sorted items")
     @Transactional
     void shouldReturnSortedItems() {
         // given

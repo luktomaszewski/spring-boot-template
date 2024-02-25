@@ -1,15 +1,13 @@
 package com.github.lomasz.spring.boot.template.adapter.out.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.github.lomasz.spring.boot.template.application.domain.exception.BusinessException;
+import com.github.lomasz.spring.boot.template.application.domain.exception.NotFoundException;
 import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
@@ -17,6 +15,7 @@ import com.github.lomasz.spring.boot.template.application.domain.model.Template;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,6 +35,7 @@ class TemplatePersistenceAdapterTest {
     private TemplatePersistenceAdapter sut;
 
     @Test
+    @DisplayName("operation: create, should: return id, when: new template created")
     void create() {
         // given
         Long id = 1L;
@@ -62,22 +62,18 @@ class TemplatePersistenceAdapterTest {
     }
 
     @Test
+    @DisplayName("operation: findById, should: throw NotFoundException, when: doesn't exist")
     void findByIdWhenEntityDoesntExistsShouldReturnOptionalEmpty() {
         // given
         Long id = 1L;
 
-        when(templateRepository.findById(id)).thenReturn(Optional.empty());
-
         // when
-        Optional<Template> result = sut.findById(id);
-
         // then
-        assertFalse(result.isPresent());
-
-        verify(templateRepository).findById(id);
+        assertThrows(NotFoundException.class, () -> sut.findById(id));
     }
 
     @Test
+    @DisplayName("operation: findById, should: return template, when: exists")
     void findByIdWhenEntityExistsShouldReturnOptionalTeamDto() {
         // given
         Long id = 1L;
@@ -102,16 +98,16 @@ class TemplatePersistenceAdapterTest {
         when(templateRepository.findById(id)).thenReturn(Optional.of(entity));
 
         // when
-        Optional<Template> result = sut.findById(id);
+        Template result = sut.findById(id);
 
         // then
-        assertTrue(result.isPresent());
-        assertThat(result.get()).isEqualTo(dto);
-
-        verify(templateRepository).findById(id);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(dto);
     }
 
     @Test
+    @DisplayName("operation: search, should: return search result")
     void search() {
         // given
         int page = 0;
@@ -164,11 +160,10 @@ class TemplatePersistenceAdapterTest {
         assertThat(result.getPage()).isEqualTo(page);
         assertThat(result.getPages()).isEqualTo(totalPages);
         assertThat(result.getTotalCount()).isEqualTo(totalElements);
-
-        verify(templateRepository).findAll(any(Pageable.class));
     }
 
     @Test
+    @DisplayName("operation: search, should: throw BusinessException: when: wrong sort field value")
     void searchWhenWrongSortValueShouldReturnBusinessException() {
         // given
         int page = 0;
@@ -181,6 +176,5 @@ class TemplatePersistenceAdapterTest {
         // when
         // then
         assertThrows(BusinessException.class, () -> sut.search(page, limit, sortDirection, sortBy));
-        verify(templateRepository).findAll(any(Pageable.class));
     }
 }

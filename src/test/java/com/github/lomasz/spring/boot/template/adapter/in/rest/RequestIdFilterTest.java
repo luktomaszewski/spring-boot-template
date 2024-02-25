@@ -9,6 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.util.UUID;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -28,6 +29,7 @@ class RequestIdFilterTest {
     private final RequestIdFilter sut = new RequestIdFilter();
 
     @Test
+    @DisplayName("should: generate request id, when: absent")
     void shouldGenerateRequestIdIfAbsent() throws IOException, ServletException {
         // given
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -42,6 +44,7 @@ class RequestIdFilterTest {
     }
 
     @Test
+    @DisplayName("should: you existing request id, when: provided")
     void shouldUseExistingRequestId() throws IOException, ServletException {
         // given
         String existingRequestId = UUID.randomUUID().toString();
@@ -60,6 +63,7 @@ class RequestIdFilterTest {
     }
 
     @Test
+    @DisplayName("should: set request id in MDC")
     void shouldSetRequestIdInMDC() throws IOException, ServletException {
         // given
         MockHttpServletRequest request = new MockHttpServletRequest();

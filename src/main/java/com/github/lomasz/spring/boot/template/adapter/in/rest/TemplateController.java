@@ -51,8 +51,6 @@ class TemplateController implements TemplateApiDoc {
 
     @GetMapping("/{id}")
     public ResponseEntity<Template> getById(@PathVariable("id") Long id) {
-        return getTemplateUseCase.execute(new GetTemplateUseCase.Input(id)).template()
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(getTemplateUseCase.execute(new GetTemplateUseCase.Input(id)).template());
     }
 }

@@ -2,7 +2,6 @@ package com.github.lomasz.spring.boot.template.application.usecase;
 
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
 import com.github.lomasz.spring.boot.template.application.port.GetTemplatePort;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class GetTemplateUseCase implements UseCase<GetTemplateUseCase.Input, Get
     public record Input(Long id) implements UseCase.Input {
     }
 
-    public record Output(Optional<Template> template) implements UseCase.Output {
+    public record Output(Template template) implements UseCase.Output {
     }
 
 }
