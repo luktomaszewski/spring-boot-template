@@ -12,6 +12,7 @@ import com.github.lomasz.spring.boot.template.application.domain.model.NewTempla
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +42,7 @@ class TemplatePersistenceAdapterTest {
         Long id = 1L;
         String name = "John Doe";
         String acronym = "JD";
-        Long budget = 182005000L;
+        BigDecimal budget = BigDecimal.valueOf(182005000);
 
         NewTemplate dto = new NewTemplate(name, acronym, budget);
 
@@ -62,8 +63,8 @@ class TemplatePersistenceAdapterTest {
     }
 
     @Test
-    @DisplayName("operation: findById, should: throw NotFoundException, when: doesn't exist")
-    void findByIdWhenEntityDoesntExistsShouldReturnOptionalEmpty() {
+    @DisplayName("operation: findById, should: throw NotFoundException, when: does not exist")
+    void findByIdWhenEntityDoesNotExistsShouldReturnOptionalEmpty() {
         // given
         Long id = 1L;
 
@@ -76,34 +77,24 @@ class TemplatePersistenceAdapterTest {
     @DisplayName("operation: findById, should: return template, when: exists")
     void findByIdWhenEntityExistsShouldReturnOptionalTeamDto() {
         // given
-        Long id = 1L;
-        String name = "John Doe";
-        String acronym = "JD";
-        Long budget = 182005000L;
-
         TemplateEntity entity = TemplateEntity.builder()
-                .id(id)
-                .name(name)
-                .acronym(acronym)
-                .budget(budget)
+                .id(1L)
+                .name("John Doe")
+                .acronym("JD")
+                .budget(BigDecimal.valueOf(182005000))
                 .build();
 
-        Template dto = Template.builder()
-                .id(id)
-                .name(name)
-                .acronym(acronym)
-                .budget(budget)
-                .build();
-
-        when(templateRepository.findById(id)).thenReturn(Optional.of(entity));
+        when(templateRepository.findById(1L)).thenReturn(Optional.of(entity));
 
         // when
-        Template result = sut.findById(id);
+        Template result = sut.findById(1L);
 
         // then
-        assertThat(result)
-                .isNotNull()
-                .isEqualTo(dto);
+        assertThat(result).isNotNull();
+        assertThat(result.id()).isEqualTo(1L);
+        assertThat(result.name()).isEqualTo("John Doe");
+        assertThat(result.acronym()).isEqualTo("JD");
+        assertThat(result.budget()).isEqualTo(BigDecimal.valueOf(182005000));
     }
 
     @Test
@@ -118,7 +109,7 @@ class TemplatePersistenceAdapterTest {
         Long id = 1L;
         String name = "John Doe";
         String acronym = "JD";
-        Long budget = 182005000L;
+        BigDecimal budget = BigDecimal.valueOf(182005000);
 
         TemplateEntity entity = TemplateEntity.builder()
                 .id(id)
@@ -155,11 +146,11 @@ class TemplatePersistenceAdapterTest {
         SearchResult<Template> result = sut.search(page, limit, sortDirection, sortBy);
 
         // then
-        assertThat(result.getItems()).contains(dto);
-        assertThat(result.getLimit()).isEqualTo(limit);
-        assertThat(result.getPage()).isEqualTo(page);
-        assertThat(result.getPages()).isEqualTo(totalPages);
-        assertThat(result.getTotalCount()).isEqualTo(totalElements);
+        assertThat(result.items()).contains(dto);
+        assertThat(result.limit()).isEqualTo(limit);
+        assertThat(result.page()).isEqualTo(page);
+        assertThat(result.pages()).isEqualTo(totalPages);
+        assertThat(result.totalCount()).isEqualTo(totalElements);
     }
 
     @Test

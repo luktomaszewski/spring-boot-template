@@ -7,6 +7,7 @@ import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateRe
 import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
 import com.github.lomasz.spring.boot.template.application.port.AddTemplatePort;
 import jakarta.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,11 +36,7 @@ class AddTemplateUseCaseTest {
     @Transactional
     void shouldCreate() {
         // given
-        NewTemplate newTemplate = NewTemplate.builder()
-                .name("John Doe")
-                .acronym("JD")
-                .budget(100000L)
-                .build();
+        NewTemplate newTemplate = new NewTemplate("John Doe", "JD", BigDecimal.valueOf(100000));
 
         // when
         AddTemplateUseCase.Output result = sut.execute(new AddTemplateUseCase.Input(newTemplate));
@@ -53,6 +50,6 @@ class AddTemplateUseCaseTest {
         assertThat(entity.get().getId()).isEqualTo(result.id());
         assertThat(entity.get().getName()).isEqualTo("John Doe");
         assertThat(entity.get().getAcronym()).isEqualTo("JD");
-        assertThat(entity.get().getBudget()).isEqualTo(100000L);
+        assertThat(entity.get().getBudget()).isEqualTo(BigDecimal.valueOf(100000L));
     }
 }

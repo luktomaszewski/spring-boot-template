@@ -4,10 +4,8 @@ import com.github.lomasz.spring.boot.template.application.domain.exception.Busin
 import com.github.lomasz.spring.boot.template.application.domain.exception.NotFoundException;
 import com.github.lomasz.spring.boot.template.application.domain.exception.TechnicalException;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -39,10 +37,8 @@ class RestExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        List<String> errors = Arrays.stream(ex.getDetailMessageArguments())
-                .filter(String.class::isInstance)
-                .map(String.class::cast)
-                .filter(Strings::isNotBlank)
+        List<String> errors = ex.getFieldErrors().stream()
+                .map(x -> "%s: %s".formatted(x.getField(), x.getDefaultMessage()))
                 .toList();
 
         return ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, "Invalid request content")

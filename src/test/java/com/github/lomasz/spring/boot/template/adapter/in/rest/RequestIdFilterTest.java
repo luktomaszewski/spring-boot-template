@@ -76,8 +76,5 @@ class RequestIdFilterTest {
         verify(filterChain).doFilter(request, response);
         assertNotNull(response.getHeader(X_REQUEST_ID));
         assertTrue(MDC.getCopyOfContextMap().isEmpty() || !MDC.getCopyOfContextMap().containsKey(X_REQUEST_ID));
-
-        // Clean up
-        MDC.clear();
     }
 }

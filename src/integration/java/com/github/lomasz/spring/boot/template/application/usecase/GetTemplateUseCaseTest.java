@@ -8,6 +8,7 @@ import com.github.lomasz.spring.boot.template.adapter.out.persistence.TemplateRe
 import com.github.lomasz.spring.boot.template.application.domain.exception.NotFoundException;
 import com.github.lomasz.spring.boot.template.application.port.GetTemplatePort;
 import jakarta.transaction.Transactional;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ class GetTemplateUseCaseTest {
         TemplateEntity newTemplate = TemplateEntity.builder()
                 .name("John Doe")
                 .acronym("JD")
-                .budget(100000L)
+                .budget(BigDecimal.valueOf(100000))
                 .build();
 
         TemplateEntity saved = templateRepository.save(newTemplate);
@@ -48,21 +49,20 @@ class GetTemplateUseCaseTest {
 
         // then
         assertThat(result.template()).isNotNull();
-        assertThat(result.template().getId()).isEqualTo(saved.getId());
-        assertThat(result.template().getName()).isEqualTo("John Doe");
-        assertThat(result.template().getAcronym()).isEqualTo("JD");
-        assertThat(result.template().getBudget()).isEqualTo(100000L);
+        assertThat(result.template().id()).isEqualTo(saved.getId());
+        assertThat(result.template().name()).isEqualTo("John Doe");
+        assertThat(result.template().acronym()).isEqualTo("JD");
+        assertThat(result.template().budget()).isEqualTo(BigDecimal.valueOf(100000));
     }
 
     @Test
-    @DisplayName("should: throw NotFoundException, when: doesn't exist")
-    void shouldThrowNotFoundExceptionWhenDoesntExist() {
+    @DisplayName("should: throw NotFoundException, when: does not exist")
+    void shouldThrowNotFoundExceptionWhenDoesNotExist() {
         // given
 
         // when
-        assertThrows(NotFoundException.class, () -> sut.execute(new GetTemplateUseCase.Input(1L)));
-
         // then
+        assertThrows(NotFoundException.class, () -> sut.execute(new GetTemplateUseCase.Input(1L)));
     }
 
 }

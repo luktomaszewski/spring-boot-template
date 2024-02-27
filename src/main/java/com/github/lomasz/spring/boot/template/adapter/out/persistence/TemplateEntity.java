@@ -9,15 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import java.math.BigDecimal;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
 @Builder
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Entity
 @Table(name = "template")
 public class TemplateEntity {
@@ -36,13 +33,13 @@ public class TemplateEntity {
     private String acronym;
 
     @Column(nullable = false)
-    private Long budget;
+    private BigDecimal budget;
 
     public static TemplateEntity fromDomain(NewTemplate newTemplate) {
         return TemplateEntity.builder()
-                .name(newTemplate.getName())
-                .budget(newTemplate.getBudget())
-                .acronym(newTemplate.getAcronym())
+                .name(newTemplate.name())
+                .budget(newTemplate.budget())
+                .acronym(newTemplate.acronym())
                 .build();
     }
 

@@ -8,6 +8,7 @@ import com.github.lomasz.spring.boot.template.application.domain.model.SortDirec
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
 import com.github.lomasz.spring.boot.template.application.port.SearchTemplatePort;
 import jakarta.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Comparator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,13 +40,13 @@ class SearchTemplatesUseCaseTest {
         TemplateEntity johnDoe = TemplateEntity.builder()
                 .name("John Doe")
                 .acronym("JD")
-                .budget(100000L)
+                .budget(BigDecimal.valueOf(100000L))
                 .build();
 
         TemplateEntity janKowalski = TemplateEntity.builder()
                 .name("Jan Kowalski")
                 .acronym("JK")
-                .budget(200000L)
+                .budget(BigDecimal.valueOf(200000))
                 .build();
 
         templateRepository.save(johnDoe);
@@ -57,14 +58,14 @@ class SearchTemplatesUseCaseTest {
 
         // then
         assertThat(result.result()).isNotNull();
-        assertThat(result.result().getLimit()).isEqualTo(20);
-        assertThat(result.result().getPage()).isEqualTo(0);
-        assertThat(result.result().getPages()).isEqualTo(1);
-        assertThat(result.result().getTotalCount()).isEqualTo(2);
-        assertThat(result.result().getItems())
+        assertThat(result.result().limit()).isEqualTo(20);
+        assertThat(result.result().page()).isEqualTo(0);
+        assertThat(result.result().pages()).isEqualTo(1);
+        assertThat(result.result().totalCount()).isEqualTo(2);
+        assertThat(result.result().items())
                 .hasSize(2)
                 .hasOnlyElementsOfType(Template.class)
-                .isSortedAccordingTo(Comparator.comparing(Template::getBudget));
+                .isSortedAccordingTo(Comparator.comparing(Template::budget));
     }
 
 }

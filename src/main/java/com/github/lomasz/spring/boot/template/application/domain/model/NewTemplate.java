@@ -3,28 +3,20 @@ package com.github.lomasz.spring.boot.template.application.domain.model;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
 
-@Getter
-@Setter
-@Builder
-@ToString
-@AllArgsConstructor
-public class NewTemplate {
+public record NewTemplate(
 
-    @NotNull
-    @Size(max = 255)
-    private String name;
+        @NotNull
+        @Size(max = 255)
+        String name,
 
-    @NotNull
-    @Size(max = 5)
-    private String acronym;
+        @NotNull
+        @Size(min = 1, max = 5)
+        String acronym,
 
-    @NotNull
-    @Min(value = 0L, message = "The value must be positive")
-    private Long budget;
+        @NotNull
+        @Min(value = 0L, message = "must be positive")
+        BigDecimal budget
+) {
 }
