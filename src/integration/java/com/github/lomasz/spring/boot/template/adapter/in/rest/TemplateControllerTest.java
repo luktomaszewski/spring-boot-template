@@ -128,7 +128,7 @@ class TemplateControllerTest {
     }
 
     @Test
-    @DisplayName("operation: add, should: return HttpStatus = BAD_REQUEST and ErrorResponse with many errors, when: many valdiation errors")
+    @DisplayName("operation: add, should: return HttpStatus = BAD_REQUEST and ErrorResponse with many errors, when: many validation errors")
     @Transactional
     void addWhenNewTemplateDtoWithManyValidationErrorsShouldReturnHttpStatusBadRequest() throws Exception {
         // given

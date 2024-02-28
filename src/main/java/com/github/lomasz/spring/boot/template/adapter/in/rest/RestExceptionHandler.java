@@ -11,6 +11,7 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
 @Slf4j
 @ControllerAdvice
@@ -18,6 +19,9 @@ class RestExceptionHandler {
 
     private static final String TIMESTAMP = "timestamp";
     private static final String ERRORS = "errors";
+    private static final String REQUEST_ID = "requestId";
+
+    private static final String X_REQUEST_ID_HEADER = "X-Request-ID";
 
     @ExceptionHandler(NotFoundException.class)
     ErrorResponse handle(NotFoundException ex) {
@@ -49,10 +53,11 @@ class RestExceptionHandler {
     }
 
     @ExceptionHandler(TechnicalException.class)
-    ErrorResponse handle(TechnicalException ex) {
+    ErrorResponse handle(TechnicalException ex, WebRequest req) {
         log.error("Technical Exception: {}", ex.getMessage(), ex);
         return ErrorResponse.builder(ex, HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error")
                 .title("Internal Server Error")
+                .property(REQUEST_ID, req.getHeader(X_REQUEST_ID_HEADER))
                 .property(TIMESTAMP, Instant.now())
                 .build();
     }
