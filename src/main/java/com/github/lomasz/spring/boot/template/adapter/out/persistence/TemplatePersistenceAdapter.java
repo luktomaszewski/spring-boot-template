@@ -36,13 +36,13 @@ public class TemplatePersistenceAdapter implements AddTemplatePort, SearchTempla
                 .map(TemplateEntity::toDomain)
                 .toList();
 
-        return SearchResult.<Template>builder()
-                .items(items)
-                .limit(resultPage.getPageable().getPageSize())
-                .page(resultPage.getPageable().getPageNumber())
-                .pages(resultPage.getTotalPages())
-                .totalCount(resultPage.getTotalElements())
-                .build();
+        return new SearchResult<>(
+                items,
+                resultPage.getTotalElements(),
+                resultPage.getPageable().getPageNumber(),
+                resultPage.getPageable().getPageSize(),
+                resultPage.getTotalPages()
+        );
     }
 
     private Sort.Direction mapDirection(SortDirection sortDirection) {

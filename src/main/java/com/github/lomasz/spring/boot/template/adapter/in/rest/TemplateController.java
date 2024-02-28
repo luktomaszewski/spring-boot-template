@@ -1,6 +1,5 @@
 package com.github.lomasz.spring.boot.template.adapter.in.rest;
 
-import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
@@ -9,6 +8,7 @@ import com.github.lomasz.spring.boot.template.application.usecase.GetTemplateUse
 import com.github.lomasz.spring.boot.template.application.usecase.SearchTemplatesUseCase;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,17 +30,21 @@ class TemplateController implements TemplateApiDoc {
     private final GetTemplateUseCase getTemplateUseCase;
 
     @GetMapping
-    public ResponseEntity<SearchResult<Template>> search(
+    public ResponseEntity<SearchResult<TemplateResponse>> search(
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "20") int size,
             @RequestParam(name = "order", required = false, defaultValue = "ASC") SortDirection sortDirection,
             @RequestParam(value = "sort", required = false, defaultValue = "name") String sortProperty) {
-        return ResponseEntity.ok(searchTemplatesUseCase.execute(new SearchTemplatesUseCase.Input(page, size, sortDirection, sortProperty)).result());
+        SearchResult<Template> result = searchTemplatesUseCase.execute(new SearchTemplatesUseCase.Input(page, size, sortDirection, sortProperty)).result();
+        List<TemplateResponse> items = result.items().stream()
+                .map(TemplateResponse::fromDomain)
+                .toList();
+        return ResponseEntity.ok(new SearchResult<>(items, result.totalCount(), result.page(), result.limit(), result.pages()));
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@RequestBody @Valid NewTemplate newDto) {
-        Long id = addTemplateUseCase.execute(new AddTemplateUseCase.Input(newDto)).id();
+    public ResponseEntity<Void> add(@RequestBody @Valid CreateTemplateRequest request) {
+        Long id = addTemplateUseCase.execute(new AddTemplateUseCase.Input(request.toDomain())).id();
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/templates/{id}")
                 .buildAndExpand(id)
@@ -50,7 +54,7 @@ class TemplateController implements TemplateApiDoc {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Template> getById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(getTemplateUseCase.execute(new GetTemplateUseCase.Input(id)).template());
+    public ResponseEntity<TemplateResponse> getById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(TemplateResponse.fromDomain(getTemplateUseCase.execute(new GetTemplateUseCase.Input(id)).template()));
     }
 }

@@ -20,7 +20,7 @@ class RestExceptionHandler {
     private static final String ERRORS = "errors";
 
     @ExceptionHandler(NotFoundException.class)
-    ErrorResponse handleNotFoundException(NotFoundException ex) {
+    ErrorResponse handle(NotFoundException ex) {
         return ErrorResponse.builder(ex, HttpStatus.NOT_FOUND, ex.getMessage())
                 .title("Not Found")
                 .property(TIMESTAMP, Instant.now())
@@ -28,7 +28,7 @@ class RestExceptionHandler {
     }
 
     @ExceptionHandler(BusinessException.class)
-    ErrorResponse handleBusinessException(BusinessException ex) {
+    ErrorResponse handle(BusinessException ex) {
         return ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, ex.getMessage())
                 .title("Business Exception")
                 .property(TIMESTAMP, Instant.now())
@@ -36,7 +36,7 @@ class RestExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    ErrorResponse handle(MethodArgumentNotValidException ex) {
         List<String> errors = ex.getFieldErrors().stream()
                 .map(x -> "%s: %s".formatted(x.getField(), x.getDefaultMessage()))
                 .toList();
@@ -49,7 +49,7 @@ class RestExceptionHandler {
     }
 
     @ExceptionHandler(TechnicalException.class)
-    ErrorResponse handleTechnicalException(TechnicalException ex) {
+    ErrorResponse handle(TechnicalException ex) {
         log.error("Technical Exception: {}", ex.getMessage(), ex);
         return ErrorResponse.builder(ex, HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error")
                 .title("Internal Server Error")

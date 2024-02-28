@@ -1,6 +1,5 @@
 package com.github.lomasz.spring.boot.template.adapter.in.rest;
 
-import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
@@ -21,7 +20,7 @@ interface TemplateApiDoc {
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
     })
-    ResponseEntity<SearchResult<Template>> search(
+    ResponseEntity<SearchResult<TemplateResponse>> search(
             @Parameter(description = "Page number of the search results") int page,
             @Parameter(description = "Number of items per page") int size,
             @Parameter(description = "Direction of sorting") SortDirection sortDirection,
@@ -33,7 +32,7 @@ interface TemplateApiDoc {
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
     })
-    ResponseEntity<Void> add(NewTemplate newDto);
+    ResponseEntity<Void> add(CreateTemplateRequest request);
 
     @Operation(summary = "Get by ID", description = "Retrieve a specific object by its ID")
     @ApiResponses(value = {
@@ -42,5 +41,5 @@ interface TemplateApiDoc {
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
     })
-    ResponseEntity<Template> getById(@Parameter(description = "ID of the object to retrieve") Long id);
+    ResponseEntity<TemplateResponse> getById(@Parameter(description = "ID of the object to retrieve") Long id);
 }
