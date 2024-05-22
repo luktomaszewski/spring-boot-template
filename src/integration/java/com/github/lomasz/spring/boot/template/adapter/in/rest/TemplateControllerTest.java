@@ -204,7 +204,7 @@ class TemplateControllerTest {
     }
 
     @Test
-    @DisplayName("operation: getById, should: return HttpStatus = CREATED and Template, when: exists")
+    @DisplayName("operation: getById, should: return HttpStatus = OK and Template, when: exists")
     @Transactional
     void getByIdWhenExistsShouldReturnTemplateDtoAndHttpStatusOk() throws Exception {
         // given
@@ -246,7 +246,7 @@ class TemplateControllerTest {
     }
 
     @Test
-    @DisplayName("operation: search, should: return HttpStatus = CREATED and unsorted items, when: default input")
+    @DisplayName("operation: search, should: return HttpStatus = OK and unsorted items, when: default input")
     @Transactional
     void searchWithDefaultInputShouldReturnUnsortedItems() throws Exception {
         // given
@@ -285,7 +285,7 @@ class TemplateControllerTest {
     }
 
     @Test
-    @DisplayName("operation: search, should: return HttpStatus = CREATED and sorted by budget (asc) items, when: custom input")
+    @DisplayName("operation: search, should: return HttpStatus = OK and sorted by budget (asc) items, when: custom input")
     @Transactional
     void searchWithCustomInputShouldReturnItemsSortedByBudgetAsc() throws Exception {
         // given

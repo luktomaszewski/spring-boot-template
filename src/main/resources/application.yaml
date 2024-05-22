@@ -1,4 +1,3 @@
-
 server:
   port: 4326
 
@@ -7,14 +6,13 @@ info:
     name: ${project.name}
     version: ${project.version}
 
-# MVC
 spring:
   problemdetails:
     enabled: true
   datasource:
     url: jdbc:h2:mem:template
   liquibase:
-    change-log: classpath:/db/changelog/master.yml
+    change-log: classpath:/db/changelog/db.changelog-master.yml
   h2:
     console:
       enabled: true
