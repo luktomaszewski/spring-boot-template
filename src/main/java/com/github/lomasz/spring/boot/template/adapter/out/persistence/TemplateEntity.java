@@ -1,6 +1,5 @@
 package com.github.lomasz.spring.boot.template.adapter.out.persistence;
 
-import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,11 +9,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "template")
 public class TemplateEntity {
@@ -35,20 +38,15 @@ public class TemplateEntity {
     @Column(nullable = false)
     private BigDecimal budget;
 
-    public static TemplateEntity fromDomain(NewTemplate newTemplate) {
+    public static TemplateEntity fromDomain(Template template) {
         return TemplateEntity.builder()
-                .name(newTemplate.name())
-                .budget(newTemplate.budget())
-                .acronym(newTemplate.acronym())
+                .name(template.name())
+                .budget(template.budget())
+                .acronym(template.acronym())
                 .build();
     }
 
     public Template toDomain() {
-        return Template.builder()
-                .id(this.id)
-                .name(this.name)
-                .acronym(this.acronym)
-                .budget(this.budget)
-                .build();
+        return new Template(this.id, this.name, this.acronym, this.budget);
     }
 }

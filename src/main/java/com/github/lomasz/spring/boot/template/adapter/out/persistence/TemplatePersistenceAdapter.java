@@ -1,7 +1,6 @@
 package com.github.lomasz.spring.boot.template.adapter.out.persistence;
 
 import com.github.lomasz.spring.boot.template.application.domain.exception.NotFoundException;
-import com.github.lomasz.spring.boot.template.application.domain.model.NewTemplate;
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
 import com.github.lomasz.spring.boot.template.application.domain.model.Template;
@@ -53,9 +52,9 @@ public class TemplatePersistenceAdapter implements AddTemplatePort, SearchTempla
     }
 
     @Override
-    public Long create(NewTemplate newTemplate) {
-        log.info("Saving new object: {}", newTemplate);
-        TemplateEntity savedEntity = templateRepository.save(TemplateEntity.fromDomain(newTemplate));
+    public Long create(Template template) {
+        log.info("Saving new object: {}", template);
+        TemplateEntity savedEntity = templateRepository.save(TemplateEntity.fromDomain(template));
         log.info("New entity saved in the database successfully: {}", savedEntity);
         return savedEntity.getId();
     }

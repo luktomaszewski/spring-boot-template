@@ -5,7 +5,6 @@ plugins {
     id "jacoco"
     id "org.owasp.dependencycheck" version "8.4.3"
     id "com.diffplug.spotless" version "6.23.0"
-    id "com.coditory.integration-test" version "1.4.5"
 }
 
 ext {
@@ -33,7 +32,7 @@ repositories {
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter"
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-webflux"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-data-rest"
     implementation "org.springframework.boot:spring-boot-starter-validation"
@@ -48,15 +47,12 @@ dependencies {
 
     runtimeOnly "com.h2database:h2:$h2Version"
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-
-
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-
+    testImplementation 'io.projectreactor:reactor-test'
     testImplementation "com.tngtech.archunit:archunit-junit5:$archUnitVersion"
-
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }
@@ -67,6 +63,11 @@ processResources {
 
 clean {
     delete "out"
+}
+
+dependencyCheck {
+    failBuildOnCVSS = 7
+    format = "HTML"
 }
 
 spotless {
@@ -96,15 +97,6 @@ jacocoTestReport {
                               "**/model/**/*"])
         }))
     }
-}
-
-dependencyCheck {
-    failBuildOnCVSS = 7
-    format = "HTML"
-}
-
-tasks.testAll {
-    finalizedBy tasks.jacocoTestReport
 }
 
 tasks.withType(Test).configureEach {

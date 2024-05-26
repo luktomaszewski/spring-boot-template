@@ -21,6 +21,6 @@ public class SearchTemplatesUseCase implements UseCase<SearchTemplatesUseCase.In
     public record Input(int page, int size, SortDirection sortDirection, String sortProperty) implements UseCase.Input {
     }
 
-    public record Output(SearchResult<Template> result) implements UseCase.Output {
+    public record Output(SearchResult<Template> searchResult) implements UseCase.Output {
     }
 }

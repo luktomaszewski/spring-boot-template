@@ -2,7 +2,6 @@ package com.github.lomasz.spring.boot.template.adapter.in.rest;
 
 import com.github.lomasz.spring.boot.template.application.domain.model.SearchResult;
 import com.github.lomasz.spring.boot.template.application.domain.model.SortDirection;
-import com.github.lomasz.spring.boot.template.application.domain.model.Template;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +15,7 @@ interface TemplateApiDoc {
 
     @Operation(summary = "Search", description = "Search based on given criteria")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "URL to retrieve object in 'Location' header"),
+            @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
     })
@@ -36,7 +35,7 @@ interface TemplateApiDoc {
 
     @Operation(summary = "Get by ID", description = "Retrieve a specific object by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Template.class))),
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TemplateResponse.class))),
             @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),

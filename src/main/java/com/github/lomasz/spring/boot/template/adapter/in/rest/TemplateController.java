@@ -8,7 +8,6 @@ import com.github.lomasz.spring.boot.template.application.usecase.GetTemplateUse
 import com.github.lomasz.spring.boot.template.application.usecase.SearchTemplatesUseCase;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,11 +34,8 @@ class TemplateController implements TemplateApiDoc {
             @RequestParam(name = "size", required = false, defaultValue = "20") int size,
             @RequestParam(name = "order", required = false, defaultValue = "ASC") SortDirection sortDirection,
             @RequestParam(value = "sort", required = false, defaultValue = "name") String sortProperty) {
-        SearchResult<Template> result = searchTemplatesUseCase.execute(new SearchTemplatesUseCase.Input(page, size, sortDirection, sortProperty)).result();
-        List<TemplateResponse> items = result.items().stream()
-                .map(TemplateResponse::fromDomain)
-                .toList();
-        return ResponseEntity.ok(new SearchResult<>(items, result.totalCount(), result.page(), result.limit(), result.pages()));
+        SearchResult<Template> result = searchTemplatesUseCase.execute(new SearchTemplatesUseCase.Input(page, size, sortDirection, sortProperty)).searchResult();
+        return ResponseEntity.ok(SearchResult.from(result, TemplateResponse::fromDomain));
     }
 
     @PostMapping
@@ -57,4 +53,5 @@ class TemplateController implements TemplateApiDoc {
     public ResponseEntity<TemplateResponse> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(TemplateResponse.fromDomain(getTemplateUseCase.execute(new GetTemplateUseCase.Input(id)).template()));
     }
+
 }
