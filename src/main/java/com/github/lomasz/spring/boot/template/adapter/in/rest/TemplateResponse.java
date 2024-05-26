@@ -4,7 +4,7 @@ import com.github.lomasz.spring.boot.template.application.domain.model.Template;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 
-public record TemplateResponse(
+record TemplateResponse(
 
         @Schema(example = "1")
         Long id,

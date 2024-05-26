@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TemplatePersistenceAdapter implements AddTemplatePort, SearchTemplatePort, GetTemplatePort {
+class TemplatePersistenceAdapter implements AddTemplatePort, SearchTemplatePort, GetTemplatePort {
 
     private final TemplateRepository templateRepository;
 
