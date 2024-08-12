@@ -15,6 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
       - name: Gradle Build
         run: make build
 
@@ -35,6 +40,11 @@ jobs:
         uses: hadolint/hadolint-action@v1.5.0
         with:
           dockerfile: build.Dockerfile
+
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
