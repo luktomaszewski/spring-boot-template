@@ -38,6 +38,8 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
 
+    implementation "org.springframework:spring-web:6.1.12" // CVE-2024-38809
+
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$swaggerVersion"
 
     implementation "org.liquibase:liquibase-core:$liquibaseVersion"
