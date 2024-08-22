@@ -1,21 +1,20 @@
 plugins {
     id "java"
     id "org.springframework.boot" version "3.3.3"
-    id "io.spring.dependency-management" version "1.1.5"
+    id "io.spring.dependency-management" version "1.1.6"
     id "jacoco"
     id "org.owasp.dependencycheck" version "8.4.3"
-    id "com.diffplug.spotless" version "6.23.0"
+    id "com.diffplug.spotless" version "6.25.0"
 }
 
 ext {
     archUnitVersion = "1.3.0"
     jacocoVersion = "0.8.12"
-    junitVersion = "5.10.2"
-    liquibaseVersion = "4.28.0"
-    lombokVersion = "1.18.32"
+    liquibaseVersion = "4.29.1"
+    lombokVersion = "1.18.34"
     mockitoVersion = "5.12.0"
-    swaggerVersion = "2.5.0"
-    h2Version = "2.2.224"
+    swaggerVersion = "2.6.0"
+    h2Version = "2.3.232"
 }
 
 group = "com.github.lomasz.spring.boot.template"
@@ -50,9 +49,9 @@ dependencies {
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.boot:spring-boot-starter-webflux"
-    testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "io.projectreactor:reactor-test"
     testImplementation "com.tngtech.archunit:archunit-junit5:$archUnitVersion"
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
