@@ -1,19 +1,19 @@
 plugins {
     id "java"
-    id "org.springframework.boot" version "3.3.3"
-    id "io.spring.dependency-management" version "1.1.6"
+    id "org.springframework.boot" version "3.4.1"
+    id "io.spring.dependency-management" version "1.1.7"
     id "jacoco"
-    id "org.owasp.dependencycheck" version "8.4.3"
-    id "com.diffplug.spotless" version "6.25.0"
+    id "org.owasp.dependencycheck" version "11.1.1"
+    id "com.diffplug.spotless" version "7.0.1"
 }
 
 ext {
     archUnitVersion = "1.3.0"
     jacocoVersion = "0.8.12"
     liquibaseVersion = "4.29.1"
-    lombokVersion = "1.18.34"
-    mockitoVersion = "5.12.0"
-    swaggerVersion = "2.6.0"
+    lombokVersion = "1.18.36"
+    mockitoVersion = "5.15.2"
+    swaggerVersion = "2.8.1"
     h2Version = "2.3.232"
 }
 
@@ -21,12 +21,13 @@ group = "com.github.lomasz.spring.boot.template"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_22
+    setSourceCompatibility(JavaVersion.VERSION_22)
+    setTargetCompatibility(JavaVersion.VERSION_22)
 }
 
 repositories {
     mavenCentral()
-    maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local/" }
+    maven { url = "https://oss.jfrog.org/artifactory/oss-snapshot-local/" }
 }
 
 dependencies {
@@ -68,6 +69,11 @@ clean {
 dependencyCheck {
     failBuildOnCVSS = 7
     format = "HTML"
+    autoUpdate = true
+
+    nvd {
+        apiKey = System.getenv("NVD_API_KEY") ?: ""
+    }
 }
 
 spotless {
@@ -75,7 +81,7 @@ spotless {
         importOrder()
         removeUnusedImports()
         //palantirJavaFormat()
-        indentWithSpaces(4)
+        leadingTabsToSpaces(4)
     }
 }
 

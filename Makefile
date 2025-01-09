@@ -28,8 +28,8 @@ build: ## build gradle project
 	docker-compose run --rm $(BUILDER_SERVICE_NAME) ./gradlew build
 
 .PHONY: owasp-check
-owasp-check: ## OWASP dependency check
-	docker-compose run --rm $(BUILDER_SERVICE_NAME) ./gradlew dependencyCheckAnalyze
+owasp-check:
+	docker-compose run --rm $(BUILDER_SERVICE_NAME) ./gradlew dependencyCheckAnalyze -Dorg.gradle.jvmargs="--enable-native-access=ALL-UNNAMED --add-modules=jdk.incubator.vector"
 
 #-- docker:
 .PHONY: image-build
