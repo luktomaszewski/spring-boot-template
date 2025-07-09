@@ -21,8 +21,8 @@ group = "com.github.lomasz.spring.boot.template"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    setSourceCompatibility(JavaVersion.VERSION_22)
-    setTargetCompatibility(JavaVersion.VERSION_22)
+    setSourceCompatibility(JavaVersion.VERSION_24)
+    setTargetCompatibility(JavaVersion.VERSION_24)
 }
 
 repositories {
@@ -52,10 +52,8 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-starter-webflux"
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testImplementation "io.projectreactor:reactor-test"
     testImplementation "com.tngtech.archunit:archunit-junit5:$archUnitVersion"
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
-    testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }
 
 processResources {

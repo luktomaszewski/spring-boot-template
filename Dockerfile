@@ -1,6 +1,6 @@
 FROM spring-boot-template:builder AS builder
 
-FROM eclipse-temurin:22.0.1_8-jre-alpine AS runtime
+FROM eclipse-temurin:24.0.1_9-jre-alpine AS runtime
 
 WORKDIR /app
 
